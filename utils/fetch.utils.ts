@@ -12,6 +12,17 @@ export interface FetchResponseWrapper<T> {
   message: string;
   data: T;
 }
+interface PostFormDataOptions {
+  headers?: Headers;
+  onUploadProgress?: (progressEvent: { loaded: number; total: number }) => void;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T | null;
+  errors?: Record<string, string[]>;
+}
 
 async function getAccessToken() {
   const item_value: string | null = await SecureStore.getItemAsync(
@@ -322,29 +333,132 @@ export async function fetchWithFormData<T>(
 export async function postFormData<T>(
   url: string,
   dataObject: Record<string, any>,
-  headers: Headers = new Headers()
-): Promise<T> {
+  options: PostFormDataOptions = {}
+): Promise<ApiResponse<T>> {
   const token = useUserStore.getState().token ?? null;
 
-  const headers_ = objectToHeaders({
-    Authorization: `Bearer ${token}`,
-    "content-type": "application/json",
-    XAT: "U",
-    "X-IDT": "A",
-  });
-
-  const formData = objectToFormData(dataObject);
-
   try {
-    const response = await fetch(url, {
-      method: "POST",
-      body: formData,
-      headers: headers_,
+    return await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      const formData = new FormData();
+
+      // Convert dataObject to FormData
+      Object.keys(dataObject).forEach((key) => {
+        const value = dataObject[key];
+
+        // Handle file objects specially
+        if (value && typeof value === "object" && "uri" in value) {
+          // This is likely a file object
+          formData.append(key, {
+            uri: value.uri,
+            type: value.type || "application/octet-stream",
+            name: value.name || "file",
+          } as any);
+        } else if (Array.isArray(value)) {
+          // Handle arrays (like tags)
+          formData.append(key, JSON.stringify(value));
+        } else if (value !== null && value !== undefined) {
+          // Handle all other values
+          formData.append(key, value.toString());
+        }
+      });
+
+      // Set up progress tracking
+      xhr.upload.onprogress = (event) => {
+        if (options.onUploadProgress) {
+          options.onUploadProgress({
+            loaded: event.loaded,
+            total: event.total,
+          });
+        }
+      };
+
+      xhr.onload = async () => {
+        try {
+          const response = JSON.parse(xhr.responseText);
+
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve({
+              success: true,
+              message: response.message || "Operation successful",
+              data: response.data || response,
+            });
+          } else {
+            resolve({
+              success: false,
+              message: response.message || "Operation failed",
+              data: null,
+              errors: response.errors || {
+                general: [`HTTP Error: ${xhr.status}`],
+              },
+            });
+          }
+        } catch (parseError) {
+          resolve({
+            success: false,
+            message: "Failed to parse server response",
+            data: null,
+            errors: {
+              general: ["Invalid server response"],
+            },
+          });
+        }
+      };
+
+      xhr.onerror = () => {
+        resolve({
+          success: false,
+          message: "Network error occurred",
+          data: null,
+          errors: {
+            general: ["Failed to connect to server"],
+          },
+        });
+      };
+
+      xhr.ontimeout = () => {
+        resolve({
+          success: false,
+          message: "Request timed out",
+          data: null,
+          errors: {
+            general: ["Server took too long to respond"],
+          },
+        });
+      };
+
+      // Open the request
+      xhr.open("POST", url, true);
+
+      // Set the authorization header if token exists
+      if (token) {
+        xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+      }
+
+      // Set required headers
+      xhr.setRequestHeader("XAT", "U");
+      xhr.setRequestHeader("X-IDT", "A");
+
+      // Add custom headers if provided
+      if (options.headers) {
+        Object.entries(options.headers).forEach(([key, value]) => {
+          xhr.setRequestHeader(key, value);
+        });
+      }
+
+      // Send the FormData
+      xhr.send(formData);
     });
-    return await response.json();
   } catch (error) {
-    console.error("Fetch error:", error);
-    throw error;
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : "Unknown error occurred",
+      data: null,
+      errors: {
+        general: [error instanceof Error ? error.message : "Unknown error"],
+      },
+    };
   }
 }
 

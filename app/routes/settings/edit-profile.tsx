@@ -12,6 +12,7 @@ import ThemedText from "@/components/ThemedText";
 import ThemedButton from "@/components/ThemedButton";
 import ThemedTextInput from "@/components/ThemedTextInput";
 import ThemedIcon from "@/components/ThemedIcon";
+import { ProfileSkeleton, ThemedSkeleton } from "@/components/ThemedSkeleton";
 import { useTheme } from "@/hooks/useTheme.hook";
 import useForm from "@/hooks/useForm.hook";
 import { fetchJson, patchJson, postFormData } from "@/utils/fetch.utils";
@@ -35,27 +36,60 @@ interface UserDetailsResponse {
   };
 }
 
-export default function EditProfileScreen() {
+function EditProfileSkeleton() {
+  return (
+    <ThemedSectionCard gap={20}>
+      <Box gap={10} align="center">
+        <ThemedSkeleton width={100} height={100} radius={50} />
+        <ThemedSkeleton width={150} height={40} radius={8} />
+      </Box>
+
+      <Box gap={15}>
+        {/* Username field skeleton */}
+        <Box gap={5}>
+          <ThemedSkeleton width={80} height={16} />
+          <ThemedSkeleton height={50} radius={10} />
+        </Box>
+
+        {/* Bio field skeleton */}
+        <Box gap={5}>
+          <ThemedSkeleton width={40} height={16} />
+          <ThemedSkeleton height={90} radius={10} />
+        </Box>
+
+        {/* Location field skeleton */}
+        <Box gap={5}>
+          <ThemedSkeleton width={70} height={16} />
+          <ThemedSkeleton height={50} radius={10} />
+        </Box>
+
+        {/* Website field skeleton */}
+        <Box gap={5}>
+          <ThemedSkeleton width={60} height={16} />
+          <ThemedSkeleton height={50} radius={10} />
+        </Box>
+
+        {/* Save button skeleton */}
+        <ThemedSkeleton height={50} radius={8} mt={10} />
+      </Box>
+    </ThemedSectionCard>
+  );
+}
+
+function EditProfileForm({
+  userDetails,
+  onSave,
+  onImagePick,
+  isUpdating,
+  isUploading,
+}: {
+  userDetails: UserDetailsResponse["data"];
+  onSave: (data: any) => void;
+  onImagePick: () => void;
+  isUpdating: boolean;
+  isUploading: boolean;
+}) {
   const theme = useTheme();
-  const { showToast } = useToast();
-  const queryClient = useQueryClient();
-  const setUser = useUserStore((state) => state.setUser);
-
-  // Fetch user details
-  const { data: userDetails, isLoading: isLoadingUser } = useQuery({
-    queryKey: ["user-details"],
-    queryFn: async () => {
-      const response = await fetchJson<UserDetailsResponse>(
-        `${BASE_URL}/users/me`
-      );
-      if (response.success) {
-        setUser(response?.data); // Update global user state
-        return response.data;
-      }
-      throw new Error(response.message);
-    },
-  });
-
   const form = useForm([
     {
       name: "username",
@@ -82,7 +116,7 @@ export default function EditProfileScreen() {
     },
   ]);
 
-  // Update form values when user details are loaded
+  // Update form values when user details change
   React.useEffect(() => {
     if (userDetails) {
       form.setFormValue("username", userDetails.username);
@@ -92,8 +126,100 @@ export default function EditProfileScreen() {
     }
   }, [userDetails]);
 
+  return (
+    <ThemedSectionCard gap={20}>
+      <Box gap={10} align="center">
+        {userDetails?.profileImagePath ? (
+          <Box width={100} height={100} radius={50} overflow="hidden">
+            <Image
+              source={{ uri: `${BASE_URL}/${userDetails.profileImagePath}` }}
+              style={{ width: "100%", height: "100%" }}
+              contentFit="cover"
+              transition={200}
+            />
+          </Box>
+        ) : (
+          <Box
+            width={100}
+            height={100}
+            radius={50}
+            color={theme.surface}
+            align="center"
+            justify="center"
+          >
+            <ThemedIcon name="user" size={40} />
+          </Box>
+        )}
+        <ThemedButton
+          label="Change Profile Picture"
+          onPress={onImagePick}
+          loading={isUploading}
+          type="primary-outlined"
+        />
+      </Box>
+
+      <Box gap={15}>
+        <ThemedTextInput
+          label="Username"
+          value={form.getFormValue("username")}
+          onChangeText={(value) => form.setFormValue("username", value)}
+        />
+
+        <ThemedTextInput
+          label="Bio"
+          value={form.getFormValue("bio")}
+          onChangeText={(value) => form.setFormValue("bio", value)}
+          multiline
+          numberOfLines={3}
+        />
+
+        <ThemedTextInput
+          label="Location"
+          value={form.getFormValue("location")}
+          onChangeText={(value) => form.setFormValue("location", value)}
+          leftSlot={<ThemedIcon name="map-pin" size={18} />}
+        />
+
+        <ThemedTextInput
+          label="Website"
+          value={form.getFormValue("website")}
+          onChangeText={(value) => form.setFormValue("website", value)}
+          leftSlot={<ThemedIcon name="globe" size={18} />}
+        />
+      </Box>
+
+      <ThemedButton
+        label="Save Changes"
+        onPress={() => form.validateForm(onSave)}
+        loading={isUpdating}
+        type="primary"
+      />
+    </ThemedSectionCard>
+  );
+}
+
+export default function EditProfileScreen() {
+  const { showToast } = useToast();
+  const queryClient = useQueryClient();
+  const setUser = useUserStore((state) => state.setUser);
+
+  // Fetch user details
+  const { data: userDetails, isLoading: isLoadingUser } = useQuery({
+    queryKey: ["user-details"],
+    queryFn: async () => {
+      const response = await fetchJson<UserDetailsResponse>(
+        `${BASE_URL}/users/me`
+      );
+      if (response.success) {
+        setUser(response?.data);
+        return response.data;
+      }
+      throw new Error(response.message);
+    },
+  });
+
   const updateProfileMutation = useMutation({
-    mutationFn: async (data: typeof form.formState) => {
+    mutationFn: async (data: any) => {
       return await patchJson(`${BASE_URL}/settings/profile`, data);
     },
     onSuccess: (response) => {
@@ -102,11 +228,9 @@ export default function EditProfileScreen() {
           title: "Profile updated successfully",
           type: "success",
         });
-        // Refetch user details and invalidate queries
         queryClient.invalidateQueries({ queryKey: ["user-details"] });
         queryClient.invalidateQueries({ queryKey: ["user"] });
       } else {
-        console.log(response);
         showToast({
           title: response.message || "Failed to update profile",
           type: "error",
@@ -141,11 +265,9 @@ export default function EditProfileScreen() {
           title: "Profile image updated successfully",
           type: "success",
         });
-        // Refetch user details and invalidate queries
         queryClient.invalidateQueries({ queryKey: ["user-details"] });
         queryClient.invalidateQueries({ queryKey: ["user"] });
       } else {
-        console.log(response);
         showToast({
           title: response.message || "Failed to update profile image",
           type: "error",
@@ -153,7 +275,6 @@ export default function EditProfileScreen() {
       }
     },
     onError: (error: any) => {
-      console.error(error);
       showToast({
         title: error.message || "Failed to update profile image",
         type: "error",
@@ -185,16 +306,6 @@ export default function EditProfileScreen() {
     }
   };
 
-  if (isLoadingUser) {
-    return (
-      <Page>
-        <Box flex={1} align="center" justify="center">
-          <ThemedText>Loading...</ThemedText>
-        </Box>
-      </Page>
-    );
-  }
-
   return (
     <Page
       scrollable
@@ -205,73 +316,17 @@ export default function EditProfileScreen() {
       gap={20}
       py={20}
     >
-      <ThemedSectionCard gap={20}>
-        <Box gap={10} align="center">
-          {userDetails?.profileImagePath ? (
-            <Box width={100} height={100} radius={50} overflow="hidden">
-              <Image
-                source={{ uri: `${BASE_URL}/${userDetails.profileImagePath}` }}
-                style={{ width: "100%", height: "100%" }}
-                contentFit="cover"
-              />
-            </Box>
-          ) : (
-            <Box
-              width={100}
-              height={100}
-              radius={50}
-              color={theme.surface}
-              align="center"
-              justify="center"
-            >
-              <ThemedIcon name="user" size={40} />
-            </Box>
-          )}
-          <ThemedButton
-            label="Change Profile Picture"
-            onPress={handleImagePick}
-            loading={uploadImageMutation.isPending}
-            type="primary-outlined"
-          />
-        </Box>
-
-        <Box gap={15}>
-          <ThemedTextInput
-            label="Username"
-            value={form.getFormValue("username")}
-            onChangeText={(value) => form.setFormValue("username", value)}
-          />
-
-          <ThemedTextInput
-            label="Bio"
-            value={form.getFormValue("bio")}
-            onChangeText={(value) => form.setFormValue("bio", value)}
-            multiline
-            numberOfLines={3}
-          />
-
-          <ThemedTextInput
-            label="Location"
-            value={form.getFormValue("location")}
-            onChangeText={(value) => form.setFormValue("location", value)}
-            leftSlot={<ThemedIcon name="map-pin" size={18} />}
-          />
-
-          <ThemedTextInput
-            label="Website"
-            value={form.getFormValue("website")}
-            onChangeText={(value) => form.setFormValue("website", value)}
-            leftSlot={<ThemedIcon name="globe" size={18} />}
-          />
-        </Box>
-
-        <ThemedButton
-          label="Save Changes"
-          onPress={() => form.validateForm(updateProfileMutation.mutate)}
-          loading={updateProfileMutation.isPending}
-          type="primary"
+      {isLoadingUser ? (
+        <EditProfileSkeleton />
+      ) : (
+        <EditProfileForm
+          userDetails={userDetails!}
+          onSave={updateProfileMutation.mutate}
+          onImagePick={handleImagePick}
+          isUpdating={updateProfileMutation.isPending}
+          isUploading={uploadImageMutation.isPending}
         />
-      </ThemedSectionCard>
+      )}
     </Page>
   );
 }

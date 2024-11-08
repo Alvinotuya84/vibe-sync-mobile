@@ -22,13 +22,13 @@ export const SETTINGS_SECTIONS: SettingsSection[] = [
     icon: "eye",
     route: "/routes/settings/appearance",
   },
-  {
-    id: "notifications",
-    title: "Notifications",
-    description: "Manage your notification preferences",
-    icon: "bell",
-    route: "/settings/notifications",
-  },
+  // {
+  //   id: "notifications",
+  //   title: "Notifications",
+  //   description: "Manage your notification preferences",
+  //   icon: "bell",
+  //   route: "/settings/notifications",
+  // },
   {
     id: "privacy",
     title: "Privacy & Security",
