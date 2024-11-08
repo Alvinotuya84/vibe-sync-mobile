@@ -23,7 +23,6 @@ export default function SettingsScreen() {
       scrollable
       header={{
         title: "Settings",
-        for: "Tab",
       }}
       gap={20}
       py={20}
@@ -49,13 +48,14 @@ export default function SettingsScreen() {
               <ThemedIcon name="user" size={30} />
             </Box>
           )}
-          <Box flex={1}>
+          <Box flex={1} justify="center">
             <ThemedText size="lg" fontWeight="bold">
               {user?.username}
               {user?.isVerified && (
                 <ThemedIcon
-                  name="check-circle"
+                  name="verified"
                   size="sm"
+                  source="MaterialIcons"
                   color={theme.primary}
                   style={{ marginLeft: 5 }}
                 />

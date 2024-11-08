@@ -3,7 +3,7 @@ import React from "react";
 import { Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { z } from "zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import Page from "@/components/Page";
 import Box from "@/components/Box";
@@ -14,26 +14,57 @@ import ThemedTextInput from "@/components/ThemedTextInput";
 import ThemedIcon from "@/components/ThemedIcon";
 import { useTheme } from "@/hooks/useTheme.hook";
 import useForm from "@/hooks/useForm.hook";
-import { patchJson, postFormData, postJson } from "@/utils/fetch.utils";
+import { fetchJson, patchJson, postFormData } from "@/utils/fetch.utils";
 import { useToast } from "@/components/toast-manager";
 import useUserStore from "@/stores/user.store";
 import { BASE_URL } from "@/constants/network";
+
+interface UserDetailsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    id: string;
+    username: string;
+    email: string;
+    profileImagePath: string | null;
+    isVerified: boolean;
+    accountType: string;
+    bio: string | null;
+    location: string | null;
+    website: string | null;
+  };
+}
 
 export default function EditProfileScreen() {
   const theme = useTheme();
   const { showToast } = useToast();
   const queryClient = useQueryClient();
-  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
+
+  // Fetch user details
+  const { data: userDetails, isLoading: isLoadingUser } = useQuery({
+    queryKey: ["user-details"],
+    queryFn: async () => {
+      const response = await fetchJson<UserDetailsResponse>(
+        `${BASE_URL}/users/me`
+      );
+      if (response.success) {
+        setUser(response?.data); // Update global user state
+        return response.data;
+      }
+      throw new Error(response.message);
+    },
+  });
 
   const form = useForm([
     {
       name: "username",
-      value: user?.username || "",
+      value: userDetails?.username || "",
       schema: z.string().min(3, "Username must be at least 3 characters"),
     },
     {
       name: "bio",
-      value: user?.bio || "",
+      value: userDetails?.bio || "",
       schema: z
         .string()
         .max(160, "Bio must be less than 160 characters")
@@ -41,32 +72,52 @@ export default function EditProfileScreen() {
     },
     {
       name: "location",
-      value: user?.location || "",
+      value: userDetails?.location || "",
       schema: z.string().max(100).optional(),
     },
     {
       name: "website",
-      value: user?.website || "",
+      value: userDetails?.website || "",
       schema: z.string().url().optional(),
     },
   ]);
+
+  // Update form values when user details are loaded
+  React.useEffect(() => {
+    if (userDetails) {
+      form.setFormValue("username", userDetails.username);
+      form.setFormValue("bio", userDetails.bio || "");
+      form.setFormValue("location", userDetails.location || "");
+      form.setFormValue("website", userDetails.website || "");
+    }
+  }, [userDetails]);
 
   const updateProfileMutation = useMutation({
     mutationFn: async (data: typeof form.formState) => {
       return await patchJson(`${BASE_URL}/settings/profile`, data);
     },
     onSuccess: (response) => {
-      if (response.success)
+      if (response.success) {
         showToast({
           title: "Profile updated successfully",
           type: "success",
         });
-      else console.log(response);
+        // Refetch user details and invalidate queries
+        queryClient.invalidateQueries({ queryKey: ["user-details"] });
+        queryClient.invalidateQueries({ queryKey: ["user"] });
+      } else {
+        console.log(response);
+        showToast({
+          title: response.message || "Failed to update profile",
+          type: "error",
+        });
+      }
+    },
+    onError: (error: any) => {
       showToast({
-        title: "Failed to update profile",
+        title: error.message || "Failed to update profile",
         type: "error",
       });
-      queryClient.invalidateQueries({ queryKey: ["user"] });
     },
   });
 
@@ -85,24 +136,26 @@ export default function EditProfileScreen() {
       );
     },
     onSuccess: (response) => {
-      console.log(response);
-      if (response.success)
+      if (response.success) {
         showToast({
           title: "Profile image updated successfully",
           type: "success",
         });
-      else
+        // Refetch user details and invalidate queries
+        queryClient.invalidateQueries({ queryKey: ["user-details"] });
+        queryClient.invalidateQueries({ queryKey: ["user"] });
+      } else {
+        console.log(response);
         showToast({
-          title: "Failed to update profile image",
+          title: response.message || "Failed to update profile image",
           type: "error",
         });
-
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      }
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error(error);
       showToast({
-        title: "Failed to update profile image",
+        title: error.message || "Failed to update profile image",
         type: "error",
       });
     },
@@ -132,6 +185,16 @@ export default function EditProfileScreen() {
     }
   };
 
+  if (isLoadingUser) {
+    return (
+      <Page>
+        <Box flex={1} align="center" justify="center">
+          <ThemedText>Loading...</ThemedText>
+        </Box>
+      </Page>
+    );
+  }
+
   return (
     <Page
       scrollable
@@ -144,10 +207,10 @@ export default function EditProfileScreen() {
     >
       <ThemedSectionCard gap={20}>
         <Box gap={10} align="center">
-          {user?.profileImagePath ? (
+          {userDetails?.profileImagePath ? (
             <Box width={100} height={100} radius={50} overflow="hidden">
               <Image
-                source={{ uri: `${BASE_URL}/${user.profileImagePath}` }}
+                source={{ uri: `${BASE_URL}/${userDetails.profileImagePath}` }}
                 style={{ width: "100%", height: "100%" }}
                 contentFit="cover"
               />
