@@ -19,7 +19,7 @@ const ThemedText = ({
   textShadowRadius,
   textShadowColor,
   includeFontPadding,
-  fontFamily = "Mulish",
+  fontFamily = "Nunito_",
   fontVariant,
   letterSpacing,
   darkModeColor,
@@ -73,22 +73,34 @@ const ThemedText = ({
 
 export default ThemedText;
 
-function mapFontweightToFontFamily(weight: FontWeight, fontPrefix = "Mulish") {
+function mapFontweightToFontFamily(weight: FontWeight, fontPrefix = "Nunito_") {
   switch (weight) {
     case "extralight":
-      return `${fontPrefix}ExtraLight`;
+      return `${fontPrefix}200ExtraLight`;
+    case "extralightItalic":
+      return `${fontPrefix}200ExtraLight_Italic`;
     case "light":
-      return `${fontPrefix}Light`;
+      return `${fontPrefix}300Light`;
+    case "lightItalic":
+      return `${fontPrefix}300Light_Italic`;
     case "regular":
-      return `${fontPrefix}`;
+      return `${fontPrefix}400Regular`;
+    case "regularItalic":
+      return `${fontPrefix}400Regular_Italic`;
     case "semibold":
-      return `${fontPrefix}SemiBold`;
+      return `${fontPrefix}500Medium`;
+    case "semiboldItalic":
+      return `${fontPrefix}500Medium_Italic`;
     case "bold":
-      return `${fontPrefix}Bold`;
+      return `${fontPrefix}700Bold`;
+    case "boldItalic":
+      return `${fontPrefix}700Bold_Italic`;
     case "extrabold":
       return `${fontPrefix}ExtraBold`;
     case "black":
-      return `${fontPrefix}Black`;
+      return `${fontPrefix}900Black`;
+    case "blackItalic":
+      return `${fontPrefix}900Black_Italic`;
     default:
       return `${fontPrefix}`;
   }
@@ -140,11 +152,18 @@ export interface ThemedTextProps {
   children?: ReactNode;
 }
 
-export type FontWeight =
+type FontWeight =
   | "extralight"
   | "light"
   | "regular"
   | "semibold"
   | "extrabold"
   | "bold"
-  | "black";
+  | "black"
+  | "extralightItalic"
+  | "italic"
+  | "lightItalic"
+  | "regularItalic"
+  | "semiboldItalic"
+  | "boldItalic"
+  | "blackItalic";

@@ -1,11 +1,17 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { zustandProtectedStorage } from ".";
+import { router } from "expo-router";
 
 interface UserType {
   id: string;
-  name: string;
+  username: string;
   email: string;
+  isVerified?: boolean;
+  profileImagePath?: string;
+  bio?: string;
+  location?: string;
+  website?: string;
   // Add other user properties here
 }
 
@@ -28,6 +34,7 @@ const useUserStore = create(
       clearUserData: () => set({ token: null, user: null }),
       logout: () => {
         set({ token: null, user: null });
+        router.replace("/login");
         // Additional actions upon logout can be added here if needed
       },
     }),

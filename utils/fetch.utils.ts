@@ -134,7 +134,7 @@ export async function postJson<T>(
     excludeAuthHeader: false,
   }
 ): Promise<FetchResponseWrapper<T>> {
-  const token = await getAccessToken();
+  const token = useUserStore.getState().token ?? null;
   const headers_ =
     options.excludeAuthHeader === false
       ? objectToHeaders({
@@ -153,6 +153,43 @@ export async function postJson<T>(
   try {
     const response = await fetch(url, {
       method: "POST",
+      headers: headers_,
+      body,
+    });
+    // alert(response.status);
+    handleSessionExpiry(response);
+    return await response.json();
+  } catch (error) {
+    console.error("Fetch error:", error);
+    throw error;
+  }
+}
+export async function patchJson<T>(
+  url: string,
+  dataObject: Record<string, any>,
+  options: FetchWrapperOptions = {
+    excludeAuthHeader: false,
+  }
+): Promise<FetchResponseWrapper<T>> {
+  const token = useUserStore.getState().token ?? null;
+  const headers_ =
+    options.excludeAuthHeader === false
+      ? objectToHeaders({
+          Authorization: `Bearer ${token}`,
+          "content-type": "application/json",
+          XAT: "U",
+          "X-IDT": "A",
+        })
+      : new Headers({
+          "content-type": "application/json",
+          XAT: "U",
+          "X-IDT": "A",
+        });
+
+  const body = JSON.stringify(dataObject);
+  try {
+    const response = await fetch(url, {
+      method: "PATCH",
       headers: headers_,
       body,
     });
@@ -287,13 +324,22 @@ export async function postFormData<T>(
   dataObject: Record<string, any>,
   headers: Headers = new Headers()
 ): Promise<T> {
+  const token = useUserStore.getState().token ?? null;
+
+  const headers_ = objectToHeaders({
+    Authorization: `Bearer ${token}`,
+    "content-type": "application/json",
+    XAT: "U",
+    "X-IDT": "A",
+  });
+
   const formData = objectToFormData(dataObject);
 
   try {
     const response = await fetch(url, {
       method: "POST",
       body: formData,
-      headers,
+      headers: headers_,
     });
     return await response.json();
   } catch (error) {
@@ -367,7 +413,7 @@ export const usePromise = (props: PromiseProps) => {
       .then((res) => {
         if (res.status === 403) {
           // Check if status code is 403
-          router.push("/auth/sign-in/");
+          router.push("/(auth)/login");
           // Replace '/login' with the actual URL of your login page
           // Throw error to be caught in the .catch() block
         }
