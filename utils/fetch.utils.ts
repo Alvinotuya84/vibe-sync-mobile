@@ -1,7 +1,7 @@
 import { handleErrorResponse } from "./error.utils";
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import userStore from "../stores/user.store";
+import useUserStore from "@/stores/user.store";
 import { LoginSuccessResponse } from "@/types/auth.types";
 import { BASE_URL } from "@/constants/network";
 interface FetchWrapperOptions {
@@ -237,7 +237,7 @@ export async function fetchJson<T>(
     excludeAuthHeader: false,
   }
 ): Promise<T> {
-  const token = userStore.getState().user?.token ?? null;
+  const token = useUserStore.getState().token ?? null;
   const headers_ =
     options.excludeAuthHeader === false
       ? objectToHeaders({
@@ -346,7 +346,7 @@ const handleSessionExpiry = (response: Response) => {
     // //  response.json().then((data) => console.log();
     // store.dispatch(logout());
     setTimeout(() => {
-      userStore.getState().logout();
+      useUserStore.getState().logout();
     }, 10);
   }
 };

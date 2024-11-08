@@ -4,8 +4,11 @@ import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedView } from "@/components/ThemedView";
 import ThemedText from "@/components/ThemedText_New";
+import ThemedButton from "@/components/ThemedButton";
+import { useToast } from "@/components/toast-manager";
 
 export default function HomeScreen() {
+  const { showToast } = useToast();
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -50,6 +53,14 @@ export default function HomeScreen() {
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
       </ThemedView>
+      <ThemedButton
+        label={"Click"}
+        onPress={() => {
+          showToast({
+            title: "Show Toast",
+          });
+        }}
+      />
     </ParallaxScrollView>
   );
 }

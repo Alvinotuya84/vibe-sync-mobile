@@ -13,6 +13,7 @@ import type { ToastType } from "./context";
 
 import { Colors } from "@/constants/Colors";
 import ThemedText from "../ThemedText_New";
+import { useTheme } from "@/hooks/useTheme.hook";
 
 // Define the props for the Toast component
 type ToastProps = {
@@ -152,6 +153,8 @@ const Toast: React.FC<ToastProps> = ({
   }, [toast.id]);
 
   // Render the Toast component
+
+  const theme = useTheme();
   return (
     <GestureDetector gesture={gesture}>
       <Animated.View
@@ -170,14 +173,14 @@ const Toast: React.FC<ToastProps> = ({
           {
             backgroundColor:
               toast.type === "error"
-                ? Colors.theme.danger
+                ? theme.danger
                 : toast.type === "success"
-                ? Colors.theme.success
+                ? theme.success
                 : toast.type === "info"
-                ? Colors.theme.light
+                ? theme.background
                 : toast.type === "warning"
                 ? "#FFA500"
-                : Colors.theme.light,
+                : theme.background,
           },
         ]}
       >
@@ -186,9 +189,7 @@ const Toast: React.FC<ToastProps> = ({
             <View style={[styles.columnCenter]}>
               <ThemedText
                 fontWeight="bold"
-                color={
-                  toast.type == "info" ? Colors.theme.light : Colors.theme.text
-                }
+                color={toast.type == "info" ? theme.background : theme.text}
                 size={16}
               >
                 {toast.title}
@@ -196,11 +197,7 @@ const Toast: React.FC<ToastProps> = ({
               {toast.subtitle && (
                 <ThemedText
                   size={13}
-                  color={
-                    toast.type == "info"
-                      ? Colors.theme.light
-                      : Colors.theme.text
-                  }
+                  color={toast.type == "info" ? theme.background : theme.text}
                 >
                   {toast.subtitle}
                 </ThemedText>
