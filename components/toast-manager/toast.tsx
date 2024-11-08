@@ -177,10 +177,10 @@ const Toast: React.FC<ToastProps> = ({
                 : toast.type === "success"
                 ? theme.success
                 : toast.type === "info"
-                ? theme.background
+                ? theme.text
                 : toast.type === "warning"
                 ? "#FFA500"
-                : theme.background,
+                : theme.text,
           },
         ]}
       >
@@ -189,7 +189,7 @@ const Toast: React.FC<ToastProps> = ({
             <View style={[styles.columnCenter]}>
               <ThemedText
                 fontWeight="bold"
-                color={toast.type == "info" ? theme.background : theme.text}
+                color={toast.type == "info" ? theme.text : theme.background}
                 size={16}
               >
                 {toast.title}
@@ -197,7 +197,7 @@ const Toast: React.FC<ToastProps> = ({
               {toast.subtitle && (
                 <ThemedText
                   size={13}
-                  color={toast.type == "info" ? theme.background : theme.text}
+                  color={toast.type == "info" ? theme.text : theme.background}
                 >
                   {toast.subtitle}
                 </ThemedText>
