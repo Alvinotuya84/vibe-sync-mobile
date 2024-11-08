@@ -1,34 +1,102 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Tabs } from "expo-router";
+import React from "react";
+import ThemedIcon from "@/components/ThemedIcon";
+import { useTheme } from "@/hooks/useTheme.hook";
+import Box from "@/components/Box";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const theme = useTheme();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: theme.primary,
+        tabBarInactiveTintColor: theme.lightText,
         headerShown: false,
-      }}>
+        tabBarStyle: {
+          backgroundColor: theme.background,
+          borderTopWidth: 1,
+          borderTopColor: theme.underline,
+          height: 60,
+          paddingBottom: 8,
+          paddingTop: 8,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontFamily: "Mulish",
+        },
+      }}
+    >
       <Tabs.Screen
-        name="index"
+        name="gigs"
         options={{
-          title: 'Home',
+          title: "Gigs",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+            <ThemedIcon
+              name={focused ? "briefcase" : "briefcase"}
+              color={color}
+              size="lg"
+            />
           ),
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
+          title: "Explore",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+            <ThemedIcon
+              name={focused ? "search" : "search"}
+              color={color}
+              size="lg"
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="new-content"
+        options={{
+          title: "",
+          tabBarIcon: ({ focused }) => (
+            <Box
+              color={theme.primary}
+              width={50}
+              height={50}
+              radius={25}
+              align="center"
+              justify="center"
+              style={{
+                marginTop: -25,
+              }}
+            >
+              <ThemedIcon name="plus" color="white" size="xl" />
+            </Box>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="community"
+        options={{
+          title: "Community",
+          tabBarIcon: ({ color, focused }) => (
+            <ThemedIcon
+              name={focused ? "users" : "users"}
+              color={color}
+              size="lg"
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="chats"
+        options={{
+          title: "Chats",
+          tabBarIcon: ({ color, focused }) => (
+            <ThemedIcon
+              name={focused ? "message-square" : "message-square"}
+              color={color}
+              size="lg"
+            />
           ),
         }}
       />
