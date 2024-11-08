@@ -54,44 +54,47 @@ export default function CreateContentScreen() {
       setIsUploading(true);
       setUploadProgress(0);
 
-      const formData = new FormData();
+      // Create the form data object structure first
+      const formDataObject = {
+        media: {
+          uri: mediaUri,
+          type: type === ContentType.VIDEO ? "video/mp4" : "image/jpeg",
+          name: `content.${type === ContentType.VIDEO ? "mp4" : "jpg"}`,
+        },
+        title: form.getFormValue("title").toString(),
+        type: type.toString(),
+        isPublished: published.toString(),
+      } as Record<string, any>;
 
-      // Append media
-      formData.append("media", {
-        uri: mediaUri,
-        type: type === ContentType.VIDEO ? "video/mp4" : "image/jpeg",
-        name: `content.${type === ContentType.VIDEO ? "mp4" : "jpg"}`,
-      } as any);
-
-      // Append thumbnail for videos
+      // Add thumbnail if it exists and is a video
       if (type === ContentType.VIDEO && thumbnailUri) {
-        formData.append("thumbnail", {
+        formDataObject.thumbnail = {
           uri: thumbnailUri,
           type: "image/jpeg",
           name: "thumbnail.jpg",
-        } as any);
+        };
       }
 
-      // Append content data
-      formData.append("title", form.getFormValue("title"));
-      formData.append("description", form.getFormValue("description") || "");
-      formData.append("type", type);
+      // Add description if it exists
+      const description = form.getFormValue("description");
+      if (description) {
+        formDataObject.description = description.toString();
+      }
 
-      // Handle optional tags
-      const tagsValue = form.getFormValue("tags");
-      if (tagsValue) {
-        const tags = tagsValue
+      // Add tags if they exist
+      const tagsString = form.getFormValue("tags");
+      if (tagsString) {
+        const tags = tagsString
           .split(",")
           .map((tag) => tag.trim())
           .filter(Boolean);
-        if (tags.length > 0) {
-          formData.append("tags", JSON.stringify(tags));
-        }
+        formDataObject.tags = JSON.stringify(tags);
       }
 
-      formData.append("isPublished", String(published));
+      // Log the object for debugging
+      console.log("Uploading content:", formDataObject);
 
-      return await postFormData(`${BASE_URL}/content`, formData, {
+      return await postFormData(`${BASE_URL}/content`, formDataObject, {
         onUploadProgress: (progressEvent) => {
           const progress = (progressEvent.loaded / progressEvent.total) * 100;
           setUploadProgress(progress);

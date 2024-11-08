@@ -342,40 +342,67 @@ export async function postFormData<T>(
       const xhr = new XMLHttpRequest();
       const formData = new FormData();
 
-      // Convert dataObject to FormData
+      // Logging the incoming dataObject
+      console.log("Original dataObject:", dataObject);
+
+      // Convert dataObject to FormData and log each entry
       Object.keys(dataObject).forEach((key) => {
         const value = dataObject[key];
+        console.log(`Processing key "${key}":`, value);
 
-        // Handle file objects specially
         if (value && typeof value === "object" && "uri" in value) {
-          // This is likely a file object
-          formData.append(key, {
+          // Handle file objects
+          const fileObject = {
             uri: value.uri,
             type: value.type || "application/octet-stream",
             name: value.name || "file",
-          } as any);
+          };
+          console.log(`Appending file for "${key}":`, fileObject);
+          formData.append(key, fileObject as any);
         } else if (Array.isArray(value)) {
-          // Handle arrays (like tags)
-          formData.append(key, JSON.stringify(value));
+          // Handle arrays
+          const arrayString = JSON.stringify(value);
+          console.log(`Appending array for "${key}":`, arrayString);
+          formData.append(key, arrayString);
         } else if (value !== null && value !== undefined) {
-          // Handle all other values
+          // Handle primitive values
+          console.log(`Appending value for "${key}":`, value.toString());
           formData.append(key, value.toString());
         }
       });
 
-      // Set up progress tracking
+      // Log headers that will be sent
+      const headersToSend = {
+        Authorization: token ? `Bearer ${token}` : undefined,
+        XAT: "U",
+        "X-IDT": "A",
+        ...options.headers,
+      };
+      console.log("Headers to be sent:", headersToSend);
+
+      // Log the full request details
+      console.log("Request details:", {
+        url,
+        method: "POST",
+        headers: headersToSend,
+        formDataKeys: Object.keys(dataObject),
+      });
+
       xhr.upload.onprogress = (event) => {
         if (options.onUploadProgress) {
-          options.onUploadProgress({
+          const progress = {
             loaded: event.loaded,
             total: event.total,
-          });
+          };
+          console.log("Upload progress:", progress);
+          options.onUploadProgress(progress);
         }
       };
 
       xhr.onload = async () => {
         try {
           const response = JSON.parse(xhr.responseText);
+          console.log("Server response:", response);
 
           if (xhr.status >= 200 && xhr.status < 300) {
             resolve({
@@ -394,6 +421,7 @@ export async function postFormData<T>(
             });
           }
         } catch (parseError) {
+          console.error("Error parsing response:", parseError);
           resolve({
             success: false,
             message: "Failed to parse server response",
@@ -406,6 +434,7 @@ export async function postFormData<T>(
       };
 
       xhr.onerror = () => {
+        console.error("XHR error occurred");
         resolve({
           success: false,
           message: "Network error occurred",
@@ -417,6 +446,7 @@ export async function postFormData<T>(
       };
 
       xhr.ontimeout = () => {
+        console.error("XHR timeout occurred");
         resolve({
           success: false,
           message: "Request timed out",
@@ -427,29 +457,26 @@ export async function postFormData<T>(
         });
       };
 
-      // Open the request
       xhr.open("POST", url, true);
 
-      // Set the authorization header if token exists
       if (token) {
         xhr.setRequestHeader("Authorization", `Bearer ${token}`);
       }
-
-      // Set required headers
       xhr.setRequestHeader("XAT", "U");
       xhr.setRequestHeader("X-IDT", "A");
 
-      // Add custom headers if provided
       if (options.headers) {
         Object.entries(options.headers).forEach(([key, value]) => {
+          console.log(`Setting custom header: ${key}:`, value);
           xhr.setRequestHeader(key, value);
         });
       }
 
-      // Send the FormData
+      console.log("Sending request...");
       xhr.send(formData);
     });
   } catch (error) {
+    console.error("Caught error in postFormData:", error);
     return {
       success: false,
       message:

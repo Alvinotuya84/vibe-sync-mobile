@@ -10,6 +10,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useTheme } from "@/hooks/useTheme.hook";
 import Box, { BoxProps } from "./Box";
+import { MotiView } from "moti";
 
 interface ThemedSkeletonProps extends BoxProps {
   width?: number | string;
@@ -130,6 +131,66 @@ export function PostSkeleton() {
         <TextLineSkeleton />
         <TextLineSkeleton width="90%" />
       </Box>
+    </Box>
+  );
+}
+
+export function DraftCardSkeleton() {
+  const theme = useTheme();
+
+  return (
+    <Box color={theme.surface} radius={10} overflow="hidden">
+      <MotiView
+        from={{
+          opacity: 0.5,
+        }}
+        animate={{
+          opacity: 1,
+        }}
+        transition={{
+          type: "timing",
+          duration: 1000,
+          loop: true,
+        }}
+      >
+        <Box gap={15} pa={15}>
+          {/* Media Preview Skeleton */}
+          <Box height={150} radius={10} color={theme.surfaceLight} />
+
+          {/* Title Skeleton */}
+          <Box width="70%" height={20} radius={5} color={theme.surfaceLight} />
+
+          {/* Description Skeleton */}
+          <Box gap={5}>
+            <Box
+              width="90%"
+              height={15}
+              radius={5}
+              color={theme.surfaceLight}
+            />
+            <Box
+              width="60%"
+              height={15}
+              radius={5}
+              color={theme.surfaceLight}
+            />
+          </Box>
+
+          {/* Tags Skeleton */}
+          <Box direction="row" gap={10}>
+            <Box width={60} height={25} radius={5} color={theme.surfaceLight} />
+            <Box width={60} height={25} radius={5} color={theme.surfaceLight} />
+            <Box width={60} height={25} radius={5} color={theme.surfaceLight} />
+          </Box>
+
+          {/* Buttons Skeleton */}
+          <Box direction="row" gap={10}>
+            <Box flex={1} height={45} radius={8} color={theme.surfaceLight} />
+            <Box flex={1} height={45} radius={8} color={theme.surfaceLight} />
+            <Box width={45} height={45} radius={8} color={theme.surfaceLight} />
+          </Box>
+        </Box>
+      </MotiView>
     </Box>
   );
 }
