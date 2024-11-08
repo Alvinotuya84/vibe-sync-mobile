@@ -32,6 +32,7 @@ import "react-native-reanimated";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { StripeProvider } from "@stripe/stripe-react-native";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -72,21 +73,26 @@ export default function RootLayout() {
   const queryClient = new QueryClient();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <ToastProvider>
-          <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-          >
-            <Stack initialRouteName="(auth)">
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+    <StripeProvider
+      publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
+      urlScheme="vibesync"
+    >
+      <QueryClientProvider client={queryClient}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <ToastProvider>
+            <ThemeProvider
+              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+            >
+              <Stack initialRouteName="(auth)">
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
 
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-          </ThemeProvider>
-        </ToastProvider>
-      </GestureHandlerRootView>
-    </QueryClientProvider>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+            </ThemeProvider>
+          </ToastProvider>
+        </GestureHandlerRootView>
+      </QueryClientProvider>
+    </StripeProvider>
   );
 }

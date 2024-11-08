@@ -31,7 +31,14 @@
     "plugins": [
       "expo-router",
       "expo-secure-store",
-      "react-native-video"
+      "react-native-video",
+      [
+        "@stripe/stripe-react-native",
+        {
+          "merchantIdentifier": "com.merchant.vibesync.",
+          "enableGooglePay": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

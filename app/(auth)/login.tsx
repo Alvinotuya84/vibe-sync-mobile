@@ -2,6 +2,7 @@ import React from "react";
 import { router } from "expo-router";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
+import * as SecureStore from "expo-secure-store";
 import Page, { FancyPageHeader } from "@/components/Page";
 import Box from "@/components/Box";
 import ThemedText from "@/components/ThemedText";
@@ -13,6 +14,7 @@ import { postJson } from "@/utils/fetch.utils";
 import { BASE_URL } from "@/constants/network";
 import type { LoginResponse } from "@/types/auth.types";
 import { useToast } from "@/components/toast-manager";
+import useUserStore from "@/stores/user.store";
 import {
   ThemedEmailInput,
   ThemedPasswordInput,
@@ -21,6 +23,8 @@ import {
 export default function LoginScreen() {
   const theme = useTheme();
   const { showToast } = useToast();
+  const setUser = useUserStore((state) => state.setUser);
+  const setToken = useUserStore((state) => state.setToken);
 
   const form = useForm([
     {
@@ -42,21 +46,40 @@ export default function LoginScreen() {
         excludeAuthHeader: true,
       });
     },
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
+      console.log(response);
       if (response.success) {
+        // Store user data and token
+        const userData = {
+          token: response.data.access_token,
+          user: response.data.user,
+        };
+
+        // Save to secure storage
+        await SecureStore.setItemAsync("userDetails", JSON.stringify(userData));
+
+        // Update global state
+        setUser(response.data.user);
+        setToken(response.data.access_token);
+
         showToast({
-          title: "Login successful",
+          title: response.message || "Login successful",
           type: "success",
         });
-        router.replace("/(tabs)");
+
+        // Navigate to main app
+        // router.replace("/(tabs)");
       } else {
+        console.log(response);
+
         showToast({
-          title: response.message,
+          title: response.message || "Login failed",
           type: "error",
         });
       }
     },
     onError: (error: any) => {
+      console.log(error);
       showToast({
         title: error.message || "Login failed",
         type: "error",

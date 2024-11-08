@@ -189,7 +189,7 @@ const Toast: React.FC<ToastProps> = ({
             <View style={[styles.columnCenter]}>
               <ThemedText
                 fontWeight="bold"
-                color={toast.type == "info" ? theme.text : theme.background}
+                color={toast.type == "info" ? theme.text : theme.lightText}
                 size={16}
               >
                 {toast.title}
@@ -197,7 +197,7 @@ const Toast: React.FC<ToastProps> = ({
               {toast.subtitle && (
                 <ThemedText
                   size={13}
-                  color={toast.type == "info" ? theme.text : theme.background}
+                  color={toast.type == "info" ? theme.text : theme.lightText}
                 >
                   {toast.subtitle}
                 </ThemedText>

@@ -2895,6 +2895,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@stripe/stripe-react-native@npm:0.37.2":
+  version: 0.37.2
+  resolution: "@stripe/stripe-react-native@npm:0.37.2"
+  peerDependencies:
+    expo: ">=46.0.9"
+    react: "*"
+    react-native: "*"
+  peerDependenciesMeta:
+    expo:
+      optional: true
+  checksum: 2996a16cc6ec8e46094df3d9fb3c1df30a847d41191ee53c045130cd0aab792f46c8f1f5ab7a6b11387294c06b8705af7d85af34a1f8c4569508ef6047ec9586
+  languageName: node
+  linkType: hard
+
 "@tanstack/query-core@npm:5.59.20":
   version: 5.59.20
   resolution: "@tanstack/query-core@npm:5.59.20"
@@ -5288,6 +5302,15 @@ __metadata:
     expo-constants: ~16.0.0
     invariant: ^2.2.4
   checksum: 32e2dbcffc802fc6570a5a9cd7839c873f6cfc40730f1cf3cdabeb2782c30b54455d41c98708dbba2649941d5ff8cb591b85689f9c1a3b7a3fcb20011aae0cb5
+  languageName: node
+  linkType: hard
+
+"expo-media-library@npm:~16.0.5":
+  version: 16.0.5
+  resolution: "expo-media-library@npm:16.0.5"
+  peerDependencies:
+    expo: "*"
+  checksum: 7c6bfc297d9e580d17f960c9e7d8cc5721ee7efe0106ba362fadf328c06f792a8f13b6112fa926f20d500ba3fb2958f02c1e85cded4711e11eae6e8d0b67d15b
   languageName: node
   linkType: hard
 
@@ -11559,6 +11582,7 @@ __metadata:
     "@gorhom/bottom-sheet": ^5.0.5
     "@react-navigation/native": ^6.0.2
     "@shopify/flash-list": 1.6.4
+    "@stripe/stripe-react-native": 0.37.2
     "@tanstack/react-query": ^5.59.20
     "@types/jest": ^29.5.12
     "@types/react": ~18.2.45
@@ -11570,6 +11594,7 @@ __metadata:
     expo-font: ~12.0.9
     expo-image: ~1.13.0
     expo-linking: ~6.3.1
+    expo-media-library: ~16.0.5
     expo-router: ~3.5.23
     expo-secure-store: ~13.0.2
     expo-splash-screen: ~0.27.5
