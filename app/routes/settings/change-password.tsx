@@ -12,6 +12,7 @@ import { useTheme } from "@/hooks/useTheme.hook";
 import { useToast } from "@/components/toast-manager";
 import useForm from "@/hooks/useForm.hook";
 import { postJson } from "@/utils/fetch.utils";
+import { BASE_URL } from "@/constants/network";
 
 export default function ChangePasswordScreen() {
   const theme = useTheme();
@@ -46,7 +47,7 @@ export default function ChangePasswordScreen() {
       currentPassword: string;
       newPassword: string;
     }) => {
-      return await postJson("/settings/password", data);
+      return await postJson(`${BASE_URL}/settings/password`, data);
     },
     onSuccess: (response) => {
       if (response.success) {

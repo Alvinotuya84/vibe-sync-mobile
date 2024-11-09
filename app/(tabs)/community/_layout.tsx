@@ -1,11 +1,40 @@
-import { View, Text } from "react-native";
+// app/(tabs)/community/_layout.tsx
 import React from "react";
 import { Stack } from "expo-router";
+import { useTheme } from "@/hooks/useTheme.hook";
 
-type Props = {};
+export default function CommunityLayout() {
+  const theme = useTheme();
 
-const CommunityLayout = (props: Props) => {
-  return <Stack />;
-};
-
-export default CommunityLayout;
+  return (
+    <Stack
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: theme.background,
+        },
+        headerTintColor: theme.text,
+        headerBackTitleVisible: false,
+      }}
+    >
+      <Stack.Screen
+        name="index"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="content/[id]"
+        options={{
+          title: "Post",
+          presentation: "modal",
+        }}
+      />
+      <Stack.Screen
+        name="profile/[id]"
+        options={{
+          title: "Profile",
+        }}
+      />
+    </Stack>
+  );
+}

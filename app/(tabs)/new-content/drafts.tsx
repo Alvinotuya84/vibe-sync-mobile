@@ -63,7 +63,7 @@ export default function DraftsScreen() {
 
   const deleteDraftMutation = useMutation({
     mutationFn: (contentId: string) =>
-      postJson(`/content/${contentId}/delete`, {}),
+      postJson(`${BASE_URL}/content/${contentId}/delete`, {}),
     onSuccess: () => {
       showToast({
         title: "Draft deleted successfully",
