@@ -31,7 +31,7 @@ export default function CommentItem({ comment, onReply }: CommentItemProps) {
     <Box gap={10}>
       <Box direction="row" gap={10}>
         <Image
-          source={{ uri: comment.user.profileImagePath }}
+          source={{ uri: `${BASE_URL}/${comment.user.profileImagePath}` }}
           style={{ width: 32, height: 32, borderRadius: 16 }}
         />
         <Box flex={1}>
@@ -68,7 +68,6 @@ export default function CommentItem({ comment, onReply }: CommentItemProps) {
           </Box>
         </Box>
       </Box>
-
       {/* Nested Replies */}
       {comment?.replies?.length > 0 && (
         <Box ml={42}>

@@ -29,7 +29,6 @@ export default function ContentDetailScreen() {
     queryKey: ["content", id],
     queryFn: () => fetchJson(`${BASE_URL}/content/${id}`),
   });
-
   const { data: commentsData } = useQuery({
     queryKey: ["content", id, "comments"],
     queryFn: () => fetchJson(`${BASE_URL}/content/${id}/comments`),
@@ -55,7 +54,7 @@ export default function ContentDetailScreen() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["content", id] });
       showToast({
-        title: `Subscribed to ${content?.creator.username}`,
+        title: `Subscribed to ${content?.creator?.username}`,
         type: "success",
       });
     },
@@ -77,10 +76,11 @@ export default function ContentDetailScreen() {
 
   if (!content) return null;
 
-  const needsSubscription = content.creator.isVerified && !content.isSubscribed;
+  const needsSubscription =
+    content.creator?.isVerified && !content.isSubscribed;
 
   return (
-    <Page header={{ title: "Post" }}>
+    <Page header={{ title: "Post" }} scrollable>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -90,7 +90,7 @@ export default function ContentDetailScreen() {
           <Box height={400} position="relative">
             {content.type === "video" ? (
               <Video
-                source={{ uri: content.mediaPath }}
+                source={{ uri: `${BASE_URL}/${content.mediaPath}` }}
                 style={{ flex: 1 }}
                 useNativeControls
                 resizeMode={ResizeMode.COVER}
@@ -98,7 +98,7 @@ export default function ContentDetailScreen() {
               />
             ) : (
               <Image
-                source={{ uri: content.mediaPath }}
+                source={{ uri: `${BASE_URL}/${content.mediaPath}` }}
                 style={{ width: "100%", height: "100%" }}
                 resizeMode="cover"
               />
@@ -123,7 +123,7 @@ export default function ContentDetailScreen() {
                     Subscribe to view this content
                   </ThemedText>
                   <ThemedButton
-                    label={`Subscribe to ${content.creator.username}`}
+                    label={`Subscribe to ${content.creator?.username}`}
                     onPress={() => subscribeMutation.mutate()}
                     loading={subscribeMutation.isPending}
                     type="primary"
@@ -137,20 +137,22 @@ export default function ContentDetailScreen() {
           <Box pa={20} gap={15}>
             <Box direction="row" justify="space-between" align="center">
               <Box direction="row" align="center" gap={10}>
-                <Image
-                  source={{ uri: content.creator.profileImagePath }}
+                {/* <Image
+                  source={{
+                    uri: `${BASE_URL}/${content.creator?.profileImagePath}`,
+                  }}
                   style={{
                     width: 40,
                     height: 40,
                     borderRadius: 20,
                   }}
-                />
+                /> */}
                 <Box>
                   <Box direction="row" align="center" gap={5}>
                     <ThemedText fontWeight="bold">
-                      {content.creator.username}
+                      {content.creator?.username}
                     </ThemedText>
-                    {content.creator.isVerified && (
+                    {content.creator?.isVerified && (
                       <ThemedIcon
                         name="check-circle"
                         size="sm"
@@ -202,6 +204,7 @@ export default function ContentDetailScreen() {
               <>
                 <ThemedText fontWeight="bold">
                   Comments ({content.commentsCount})
+                  {/* {JSON.stringify(contentData?.data)} */}
                 </ThemedText>
 
                 {/* Comment Input */}
@@ -215,7 +218,7 @@ export default function ContentDetailScreen() {
                       radius={10}
                     >
                       <ThemedText size="sm">
-                        Replying to {replyingTo.user.username}
+                        Replying to {replyingTo.user?.username}
                       </ThemedText>
                       <ThemedButton
                         type="text"
@@ -225,11 +228,8 @@ export default function ContentDetailScreen() {
                     </Box>
                   )}
 
-                  <Box direction="row" gap={10}>
+                  <Box gap={10}>
                     <ThemedTextInput
-                      wrapper={{
-                        flex: 1,
-                      }}
                       value={comment}
                       onChangeText={setComment}
                       placeholder="Add a comment..."

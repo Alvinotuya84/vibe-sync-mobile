@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { ViewToken } from "react-native";
+import { ViewToken, Image, Pressable } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { router } from "expo-router";
 import Page from "@/components/Page";
 import Box from "@/components/Box";
 import ThemedText from "@/components/ThemedText";
@@ -23,9 +24,11 @@ export default function CommunityScreen() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]>("For you");
   const [isRefreshing, setIsRefreshing] = useState(false);
+
   const formatTabForQuery = (tab: string) =>
     tab.toLowerCase().replace(/\s+/g, "-");
 
+  // Query for main content
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["community", formatTabForQuery(activeTab)],
     queryFn: () =>
@@ -34,10 +37,14 @@ export default function CommunityScreen() {
       ),
   });
 
+  // Query for video previews
+  const { data: previewsData } = useQuery({
+    queryKey: ["video-previews"],
+    queryFn: () => fetchJson(`${BASE_URL}/content/previews/videos`),
+  });
+
   const handleTabChange = async (tab: (typeof TABS)[number]) => {
     setActiveTab(tab);
-
-    // Prefetch the data for the new tab
     await queryClient.prefetchQuery({
       queryKey: ["community", formatTabForQuery(tab)],
       queryFn: () =>
@@ -50,12 +57,75 @@ export default function CommunityScreen() {
   const handleRefresh = async () => {
     setIsRefreshing(true);
     try {
-      await refetch();
+      await Promise.all([
+        refetch(),
+        queryClient.invalidateQueries({ queryKey: ["video-previews"] }),
+      ]);
     } catch (error) {
       console.error("Refresh error:", error);
     } finally {
       setIsRefreshing(false);
     }
+  };
+
+  const VideoPreviewSection = () => {
+    const videos = previewsData?.data?.videos || [];
+
+    // if (!videos.length) return null;
+
+    return (
+      <Box px={20} py={10}>
+        <Box mb={10}>
+          <ThemedText fontWeight="bold">Featured Videos</ThemedText>
+        </Box>
+        <Box direction="row" gap={10}>
+          {videos.map((video) => (
+            <Pressable
+              key={video.id}
+              onPress={() =>
+                router.push(`/routes/feed?initialVideoId=${video.id}`)
+              }
+              style={{ width: "40%" }}
+            >
+              <Box
+                radius={10}
+                overflow="hidden"
+                height={150}
+                position="relative"
+              >
+                <Image
+                  source={{ uri: `${BASE_URL}/${video.thumbnailPath}` }}
+                  style={{ width: "100%", height: "100%" }}
+                />
+                <Box
+                  position="absolute"
+                  bottom={0}
+                  left={0}
+                  right={0}
+                  pa={10}
+                  style={{
+                    backgroundColor: "rgba(0,0,0,0.5)",
+                  }}
+                >
+                  <ThemedText
+                    color="white"
+                    size="sm"
+                    textProps={{
+                      numberOfLines: 1,
+                    }}
+                  >
+                    {video.title}
+                  </ThemedText>
+                  <ThemedText color="white" size="xs">
+                    {video.creator.username}
+                  </ThemedText>
+                </Box>
+              </Box>
+            </Pressable>
+          ))}
+        </Box>
+      </Box>
+    );
   };
 
   const renderContent = () => {
@@ -80,6 +150,7 @@ export default function CommunityScreen() {
         ItemSeparatorComponent={() => <Box height={20} />}
         refreshing={isRefreshing}
         onRefresh={handleRefresh}
+        ListHeaderComponent={VideoPreviewSection}
         ListEmptyComponent={() => (
           <Box align="center" justify="center" height={300}>
             <ThemedText color={theme.lightText}>

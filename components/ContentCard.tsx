@@ -45,6 +45,21 @@ export default function ContentCard({ content }: ContentCardProps) {
       });
     },
   });
+  const profileImageUrl =
+    content.creator?.profileImageUrl || "https://via.placeholder.com/40";
+
+  // Get appropriate media URL
+  const mediaUrl =
+    content.type === "video"
+      ? content.thumbnailPath || content.mediaPath
+      : content.mediaPath;
+
+  const handleImageError = (error: any) => {
+    console.error("Image load error:", error);
+    // You could set a fallback image here
+
+    console.log(content.creator?.profileImageUrl);
+  };
 
   return (
     <Box
@@ -68,15 +83,16 @@ export default function ContentCard({ content }: ContentCardProps) {
         >
           <Box width={40} height={40} radius={20} overflow="hidden">
             <Image
-              source={{ uri: content.creator.profileImagePath }}
+              source={{ uri: profileImageUrl }}
               style={{ width: "100%", height: "100%" }}
+              onError={handleImageError}
             />
           </Box>
         </Pressable>
 
         <Box flex={1}>
           <Box direction="row" align="center" gap={5}>
-            <ThemedText fontWeight="bold">
+            <ThemedText size="sm" fontWeight="bold">
               {content.creator.username}
             </ThemedText>
             {content.creator.isVerified && (
@@ -102,28 +118,23 @@ export default function ContentCard({ content }: ContentCardProps) {
         onPress={() => router.push(`/community/content/${content.id}`)}
       >
         <Box height={300} position="relative">
-          {content.type === "video" ? (
-            <>
-              <Image
-                source={{ uri: content.thumbnailPath }}
-                style={{ width: "100%", height: "100%" }}
-              />
-              <Box
-                position="absolute"
-                top={10}
-                right={10}
-                pa={5}
-                radius={5}
-                color="rgba(0,0,0,0.5)"
-              >
-                <ThemedIcon name="play" color="white" />
-              </Box>
-            </>
-          ) : (
-            <Image
-              source={{ uri: content.mediaPath }}
-              style={{ width: "100%", height: "100%" }}
-            />
+          <Image
+            source={{ uri: mediaUrl }}
+            style={{ width: "100%", height: "100%" }}
+            onError={handleImageError}
+            resizeMode="cover"
+          />
+          {content.type === "video" && (
+            <Box
+              position="absolute"
+              top={10}
+              right={10}
+              pa={5}
+              radius={5}
+              color="rgba(0,0,0,0.5)"
+            >
+              <ThemedIcon name="play" color="white" />
+            </Box>
           )}
 
           {content.creator.isVerified && !content.isSubscribed && (
@@ -193,6 +204,7 @@ export default function ContentCard({ content }: ContentCardProps) {
                 // Implement share
               }}
             />
+            {/* <ThemedText>{JSON.stringify(content.creator)}</ThemedText> */}
           </Box>
 
           <ThemedText size="sm" color={theme.lightText}>

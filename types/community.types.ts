@@ -3,6 +3,7 @@ export interface User {
   id: string;
   username: string;
   profileImagePath?: string;
+  profileImageUrl?: string;
   isVerified: boolean;
   bio?: string;
   followersCount: number;
@@ -18,9 +19,9 @@ export interface Content {
   thumbnailPath?: string;
   tags: string[];
   creator: User;
-  likesCount: number;
+  likeCount: number;
   commentsCount: number;
-  viewsCount: number;
+  viewCount: number;
   isLiked: boolean;
   isSubscribed: boolean;
   createdAt: string;
@@ -31,7 +32,7 @@ export interface Comment {
   text: string;
   user: User;
   createdAt: string;
-  likesCount: number;
+  likeCount: number;
   isLiked: boolean;
   replies?: Comment[];
 }

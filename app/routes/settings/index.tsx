@@ -17,7 +17,7 @@ export default function SettingsScreen() {
   const theme = useTheme();
   const user = useUserStore((state) => state.user);
   const logout = useUserStore((state) => state.logout);
-
+  console.log(`${BASE_URL}/${user?.profileImagePath}`);
   return (
     <Page
       scrollable
