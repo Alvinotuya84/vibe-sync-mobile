@@ -5,6 +5,8 @@ import {
   Pressable,
   ActivityIndicator,
   View,
+  Platform,
+  StatusBar,
 } from "react-native";
 import { Video, ResizeMode, AVPlaybackStatus } from "expo-av";
 import { BlurView } from "expo-blur";
@@ -19,6 +21,11 @@ import { Content } from "@/types/community.types";
 import { postJson } from "@/utils/fetch.utils";
 import { useToast } from "@/components/toast-manager";
 import { BASE_URL } from "@/constants/network";
+import { BackButton } from "./Page";
+
+// Add this constant at the top of your file
+const STATUSBAR_HEIGHT =
+  Platform.OS === "ios" ? 44 : StatusBar.currentHeight || 0;
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -59,7 +66,8 @@ export default function VideoPlayer({
   });
 
   const subscribeMutation = useMutation({
-    mutationFn: () => postJson(`/users/${content.creator.id}/subscribe`, {}),
+    mutationFn: () =>
+      postJson(`${BASE_URL}/users/${content.creator.id}/subscribe`, {}),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["feed"] });
       showToast({
@@ -110,6 +118,45 @@ export default function VideoPlayer({
 
   return (
     <Pressable onPress={togglePlay} onLongPress={handleDoubleTap}>
+      <Box
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
+        zIndex={10}
+        style={{
+          paddingTop: STATUSBAR_HEIGHT + 10,
+          paddingHorizontal: 20,
+        }}
+      >
+        <Pressable
+          onPress={() => router.back()}
+          style={({ pressed }) => ({
+            opacity: pressed ? 0.7 : 1,
+            alignSelf: "flex-start",
+          })}
+        >
+          <Box
+            pa={8}
+            radius={20}
+            color="rgba(0,0,0,0.3)"
+            direction="row"
+            align="center"
+            gap={5}
+          >
+            <ThemedIcon
+              name={Platform.OS === "ios" ? "chevron-left" : "arrow-left"}
+              color="white"
+              size="lg"
+            />
+            {/* {Platform.OS === "ios" && (
+              <ThemedText color="white" size="md">
+                Back
+              </ThemedText>
+            )} */}
+          </Box>
+        </Pressable>
+      </Box>
       <Box width={SCREEN_WIDTH} height={SCREEN_HEIGHT} position="relative">
         <Video
           ref={videoRef}
