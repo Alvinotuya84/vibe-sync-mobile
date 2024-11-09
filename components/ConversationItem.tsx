@@ -5,6 +5,7 @@ import ThemedText from "@/components/ThemedText";
 import { formatDistanceToNow } from "date-fns";
 import { useTheme } from "@/hooks/useTheme.hook";
 import useUserStore from "@/stores/user.store";
+import { BASE_URL } from "@/constants/network";
 
 export interface Conversation {
   id: string;
@@ -46,7 +47,9 @@ export default function ConversationItem({
         <Box width={50} height={50} radius={25} overflow="hidden">
           {otherParticipant.profileImagePath ? (
             <Image
-              source={{ uri: otherParticipant.profileImagePath }}
+              source={{
+                uri: `${BASE_URL}/${otherParticipant.profileImagePath}`,
+              }}
               style={{ width: "100%", height: "100%" }}
             />
           ) : (

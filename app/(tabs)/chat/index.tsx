@@ -9,6 +9,8 @@ import { fetchJson } from "@/utils/fetch.utils";
 import { useTheme } from "@/hooks/useTheme.hook";
 import ConversationItem from "@/components/ConversationItem";
 import { BASE_URL } from "@/constants/network";
+import ThemedMainHeader from "@/components/ThemedMainHeader";
+import ThemedButton from "@/components/ThemedButton";
 
 // Skeleton component for loading state
 const ConversationSkeleton = () => {
@@ -90,8 +92,24 @@ export default function ChatScreen() {
   return (
     <Page
       header={{
-        title: "Messages",
         for: "Tab",
+        rightComponent: (
+          <ThemedMainHeader
+            showBackButton={false}
+            rightComponent={
+              <Box direction="row" gap={10}>
+                <ThemedButton type="text" icon={{ name: "heart" }} />
+                <ThemedButton
+                  type="text"
+                  icon={{ name: "search" }}
+                  onPress={() => {
+                    /* Handle search */
+                  }}
+                />
+              </Box>
+            }
+          />
+        ),
       }}
     >
       {isLoading ? (
@@ -117,6 +135,7 @@ export default function ChatScreen() {
           contentContainerStyle={
             conversations.length === 0 ? { flex: 1 } : undefined
           }
+          ListHeaderComponent={<Box height={20}></Box>}
           ListEmptyComponent={() => (
             <Box flex={1} align="center" justify="center" pa={20}>
               <ThemedText align="center" color={theme.lightText}>
