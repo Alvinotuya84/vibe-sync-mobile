@@ -6,16 +6,14 @@ import {
 import {
   useFonts,
   Nunito_200ExtraLight,
-  Nunito_300Light,
-  Nunito_400Regular,
+  Nunito_200ExtraLight_Italic,
+  Nunito_300Light_Italic,
+  Nunito_400Regular_Italic,
   Nunito_500Medium,
   Nunito_600SemiBold,
   Nunito_700Bold,
   Nunito_800ExtraBold,
   Nunito_900Black,
-  Nunito_200ExtraLight_Italic,
-  Nunito_300Light_Italic,
-  Nunito_400Regular_Italic,
   Nunito_500Medium_Italic,
   Nunito_600SemiBold_Italic,
   Nunito_700Bold_Italic,
@@ -30,9 +28,16 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { StripeProvider } from "@stripe/stripe-react-native";
+import { NotificationProvider } from "@/hooks/useGlobalNotification";
+import { useNotifications } from "@/hooks/useNotification";
+
+// Create a wrapper component to use hooks
+function NotificationWrapper({ children }: { children: React.ReactNode }) {
+  useNotifications(); // Use the hook here
+  return <>{children}</>;
+}
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -43,16 +48,15 @@ export default function RootLayout() {
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
     Nunito_200ExtraLight,
-    Nunito_300Light,
-    Nunito_400Regular,
+    Nunito_200ExtraLight_Italic,
+    Nunito_300Light_Italic,
+    Nunito_400Regular_Italic,
     Nunito_500Medium,
     Nunito_600SemiBold,
     Nunito_700Bold,
     Nunito_800ExtraBold,
     Nunito_900Black,
-    Nunito_200ExtraLight_Italic,
-    Nunito_300Light_Italic,
-    Nunito_400Regular_Italic,
+
     Nunito_500Medium_Italic,
     Nunito_600SemiBold_Italic,
     Nunito_700Bold_Italic,
@@ -79,22 +83,31 @@ export default function RootLayout() {
     >
       <QueryClientProvider client={queryClient}>
         <GestureHandlerRootView style={{ flex: 1 }}>
-          <ToastProvider>
-            <ThemeProvider
-              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-            >
-              <Stack initialRouteName="(auth)">
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="+not-found" />
-                <Stack.Screen
-                  name="routes/feed"
-                  options={{ headerShown: false }}
-                />
-              </Stack>
-            </ThemeProvider>
-          </ToastProvider>
+          <NotificationProvider>
+            <NotificationWrapper>
+              <ToastProvider>
+                <ThemeProvider
+                  value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+                >
+                  <Stack initialRouteName="(auth)">
+                    <Stack.Screen
+                      name="(auth)"
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      name="(tabs)"
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen name="+not-found" />
+                    <Stack.Screen
+                      name="routes/feed"
+                      options={{ headerShown: false }}
+                    />
+                  </Stack>
+                </ThemeProvider>
+              </ToastProvider>
+            </NotificationWrapper>
+          </NotificationProvider>
         </GestureHandlerRootView>
       </QueryClientProvider>
     </StripeProvider>
