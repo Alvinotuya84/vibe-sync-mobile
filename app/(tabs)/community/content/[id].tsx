@@ -16,6 +16,61 @@ import { Comment } from "@/types/community.types";
 import { BASE_URL } from "@/constants/network";
 import ThemedIcon from "@/components/ThemedIcon";
 import CommentItem from "@/components/CommentItem";
+import { ErrorState } from "@/components/ErrorState";
+import {
+  ThemedSkeleton,
+  AvatarSkeleton,
+  TextLineSkeleton,
+} from "@/components/ThemedSkeleton";
+
+function ContentDetailSkeleton() {
+  return (
+    <Box flex={1}>
+      {/* Media Skeleton */}
+      <ThemedSkeleton height={400} radius={0} />
+
+      {/* Content Info Skeleton */}
+      <Box pa={20} gap={15}>
+        <Box direction="row" justify="space-between" align="center">
+          <Box direction="row" align="center" gap={10}>
+            <AvatarSkeleton size={40} />
+            <Box gap={5}>
+              <TextLineSkeleton width={120} />
+              <TextLineSkeleton width={80} height={12} />
+            </Box>
+          </Box>
+          <Box direction="row" gap={15}>
+            <TextLineSkeleton width={40} height={20} />
+            <TextLineSkeleton width={40} height={20} />
+          </Box>
+        </Box>
+
+        <Box gap={5}>
+          <TextLineSkeleton width={200} />
+          <TextLineSkeleton />
+          <TextLineSkeleton width="90%" />
+        </Box>
+
+        {/* Comments Section Skeleton */}
+        <Box gap={15}>
+          <TextLineSkeleton width={150} />
+          <Box gap={20}>
+            {[1, 2, 3].map((i) => (
+              <Box key={i} direction="row" gap={10}>
+                <AvatarSkeleton size={32} />
+                <Box flex={1} gap={5}>
+                  <TextLineSkeleton width={100} />
+                  <TextLineSkeleton width="90%" />
+                  <TextLineSkeleton width="60%" />
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
+}
 
 export default function ContentDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -25,11 +80,22 @@ export default function ContentDetailScreen() {
   const [comment, setComment] = useState("");
   const [replyingTo, setReplyingTo] = useState<Comment | null>(null);
 
-  const { data: contentData } = useQuery({
+  const {
+    data: contentData,
+    isLoading: contentLoading,
+    error: contentError,
+    refetch: refetchContent,
+  } = useQuery({
     queryKey: ["content", id],
     queryFn: () => fetchJson(`${BASE_URL}/content/${id}`),
   });
-  const { data: commentsData } = useQuery({
+
+  const {
+    data: commentsData,
+    isLoading: commentsLoading,
+    error: commentsError,
+    refetch: refetchComments,
+  } = useQuery({
     queryKey: ["content", id, "comments"],
     queryFn: () => fetchJson(`${BASE_URL}/content/${id}/comments`),
   });
@@ -74,7 +140,31 @@ export default function ContentDetailScreen() {
     },
   });
 
-  if (!content) return null;
+  // Handle loading state
+  if (contentLoading || commentsLoading) {
+    return (
+      <Page header={{ title: "Post" }}>
+        <ContentDetailSkeleton />
+      </Page>
+    );
+  }
+
+  // Handle error states
+  if (contentError) {
+    return (
+      <Page header={{ title: "Post" }}>
+        <ErrorState message="Failed to load content" onRetry={refetchContent} />
+      </Page>
+    );
+  }
+
+  if (!content) {
+    return (
+      <Page header={{ title: "Post" }}>
+        <ErrorState message="Content not found" onRetry={refetchContent} />
+      </Page>
+    );
+  }
 
   const needsSubscription =
     content.creator?.isVerified && !content.isSubscribed;
@@ -137,7 +227,7 @@ export default function ContentDetailScreen() {
           <Box pa={20} gap={15}>
             <Box direction="row" justify="space-between" align="center">
               <Box direction="row" align="center" gap={10}>
-                {/* <Image
+                <Image
                   source={{
                     uri: `${BASE_URL}/${content.creator?.profileImagePath}`,
                   }}
@@ -146,7 +236,7 @@ export default function ContentDetailScreen() {
                     height: 40,
                     borderRadius: 20,
                   }}
-                /> */}
+                />
                 <Box>
                   <Box direction="row" align="center" gap={5}>
                     <ThemedText fontWeight="bold">
@@ -204,7 +294,6 @@ export default function ContentDetailScreen() {
               <>
                 <ThemedText fontWeight="bold">
                   Comments ({content.commentsCount})
-                  {/* {JSON.stringify(contentData?.data)} */}
                 </ThemedText>
 
                 {/* Comment Input */}
@@ -249,15 +338,22 @@ export default function ContentDetailScreen() {
                 </Box>
 
                 {/* Comments List */}
-                <Box gap={15} pb={20}>
-                  {comments.map((comment) => (
-                    <CommentItem
-                      key={comment.id}
-                      comment={comment}
-                      onReply={() => setReplyingTo(comment)}
-                    />
-                  ))}
-                </Box>
+                {commentsError ? (
+                  <ErrorState
+                    message="Failed to load comments"
+                    onRetry={refetchComments}
+                  />
+                ) : (
+                  <Box gap={15} pb={20}>
+                    {comments.map((comment) => (
+                      <CommentItem
+                        key={comment.id}
+                        comment={comment}
+                        onReply={() => setReplyingTo(comment)}
+                      />
+                    ))}
+                  </Box>
+                )}
               </>
             )}
           </Box>
