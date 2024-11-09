@@ -30,6 +30,13 @@ export const SETTINGS_SECTIONS: SettingsSection[] = [
   //   route: "/settings/notifications",
   // },
   {
+    id: "password",
+    title: "Change Password",
+    description: "Update your account password",
+    icon: "pencil",
+    route: "/routes/settings/change-password",
+  },
+  {
     id: "privacy",
     title: "Privacy & Security",
     description: "Control your privacy settings",
