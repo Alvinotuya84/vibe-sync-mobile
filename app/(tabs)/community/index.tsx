@@ -81,7 +81,6 @@ export default function CommunityScreen() {
           <ThemedButton
             type="text"
             label={"View All "}
-            onPress={() => router.push("/routes/feed")}
             labelProps={{
               textDecorationLine: "underline",
             }}
@@ -94,12 +93,12 @@ export default function CommunityScreen() {
               onPress={() =>
                 router.push(`/routes/feed?initialVideoId=${video.id}`)
               }
-              style={{ width: "40%" }}
+              style={{ width: "50%" }}
             >
               <Box
                 radius={10}
                 overflow="hidden"
-                height={150}
+                height={170}
                 position="relative"
               >
                 <Image
