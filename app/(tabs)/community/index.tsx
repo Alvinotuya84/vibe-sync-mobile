@@ -14,6 +14,7 @@ import { useTheme } from "@/hooks/useTheme.hook";
 import ContentCard from "@/components/ContentCard";
 import { BASE_URL } from "@/constants/network";
 import ContentCardSkeleton from "@/components/ContentCardSkeleton";
+import ThemedMainHeader from "@/components/ThemedMainHeader";
 
 const TABS = ["For you", "Subscribed", "Trending", "Life"] as const;
 const SKELETON_COUNT = 3;
@@ -74,9 +75,17 @@ export default function CommunityScreen() {
     // if (!videos.length) return null;
 
     return (
-      <Box px={20} py={10}>
-        <Box mb={10}>
-          <ThemedText fontWeight="bold">Featured Videos</ThemedText>
+      <Box px={20} py={10} borderTopWidth={5} borderColor={"grey"}>
+        <Box mb={10} direction="row" justify="space-between" align="center">
+          <ThemedText fontWeight="bold">CLIPS</ThemedText>
+          <ThemedButton
+            type="text"
+            label={"View All "}
+            onPress={() => router.push("/routes/feed")}
+            labelProps={{
+              textDecorationLine: "underline",
+            }}
+          />
         </Box>
         <Box direction="row" gap={10}>
           {videos.map((video) => (
@@ -163,7 +172,27 @@ export default function CommunityScreen() {
   };
 
   return (
-    <Page>
+    <Page
+      header={{
+        rightComponent: (
+          <ThemedMainHeader
+            showBackButton={false}
+            rightComponent={
+              <Box direction="row" gap={10}>
+                <ThemedButton type="text" icon={{ name: "heart" }} />
+                <ThemedButton
+                  type="text"
+                  icon={{ name: "search" }}
+                  onPress={() => {
+                    /* Handle search */
+                  }}
+                />
+              </Box>
+            }
+          />
+        ),
+      }}
+    >
       <Box
         py={10}
         px={20}
@@ -171,10 +200,6 @@ export default function CommunityScreen() {
         style={{ paddingTop: insets.top }}
       >
         <Box gap={20}>
-          <ThemedText size="xxl" fontWeight="bold">
-            Community
-          </ThemedText>
-
           <Box direction="row" gap={10}>
             {TABS.map((tab) => (
               <ThemedButton

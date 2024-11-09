@@ -207,7 +207,7 @@ export default function VideoPlayer({
         )}
 
         {/* Subscription blur overlay */}
-        {content.creator.isVerified && !content.isSubscribed && (
+        {/* {content.creator.isVerified && !content.isSubscribed && (
           <BlurView
             intensity={20}
             style={{
@@ -232,19 +232,19 @@ export default function VideoPlayer({
               />
             </Box>
           </BlurView>
-        )}
+        )} */}
 
         {/* Controls overlay */}
         {showControls && (
           <Box
             position="absolute"
-            bottom={0}
+            top={200}
             right={0}
             pa={20}
             gap={20}
-            style={{
-              backgroundColor: "rgba(0,0,0,0.3)",
-            }}
+            // style={{
+            //   backgroundColor: "rgba(0,0,0,0.3)",
+            // }}
           >
             <Pressable onPress={() => likeMutation.mutate()}>
               <Box align="center" gap={5}>
@@ -260,16 +260,21 @@ export default function VideoPlayer({
               </Box>
             </Pressable>
 
-            <Pressable
-              onPress={() => router.push(`/community/content/${content.id}`)}
-            >
-              <Box align="center" gap={5}>
-                <ThemedIcon name="message-circle" color="white" size={30} />
-                <ThemedText color="white" size="sm">
-                  {content.commentsCount}
-                </ThemedText>
-              </Box>
-            </Pressable>
+            <ThemedButton
+              type="text"
+              icon={{ name: "message-circle", color: "white", size: 30 }}
+              onPress={() => {
+                // Start a conversation and navigate to it
+                postJson(
+                  `${BASE_URL}/chat/start/${content.creator.id}`,
+                  {}
+                ).then((response) => {
+                  if (response.success) {
+                    router.push(`/chat/${response?.data.conversation.id}`);
+                  }
+                });
+              }}
+            />
 
             <Pressable onPress={() => setIsMuted(!isMuted)}>
               <Box align="center">
@@ -284,14 +289,16 @@ export default function VideoPlayer({
         )}
 
         {/* Creator info overlay */}
-        <Box
+        {/* <Box
           position="absolute"
           bottom={0}
           left={0}
           pa={20}
-          style={{
-            backgroundColor: "rgba(0,0,0,0.3)",
-          }}
+          style={
+            {
+              // backgroundColor: "rgba(0,0,0,0.3)",
+            }
+          }
         >
           <Box gap={5}>
             <Box direction="row" align="center" gap={5}>
@@ -315,7 +322,7 @@ export default function VideoPlayer({
               </ThemedText>
             )}
           </Box>
-        </Box>
+        </Box> */}
       </Box>
     </Pressable>
   );

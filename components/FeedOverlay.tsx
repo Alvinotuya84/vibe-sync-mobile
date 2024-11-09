@@ -12,6 +12,7 @@ import { useToast } from "@/components/toast-manager";
 import { postJson } from "@/utils/fetch.utils";
 import type { Content } from "@/types/community.types";
 import { Image } from "expo-image";
+import { BASE_URL } from "@/constants/network";
 
 interface FeedOverlayProps {
   content: Content;
@@ -27,7 +28,7 @@ export default function FeedOverlay({
   const queryClient = useQueryClient();
 
   const likeMutation = useMutation({
-    mutationFn: () => postJson(`/content/${content.id}/like`, {}),
+    mutationFn: () => postJson(`${BASE_URL}/content/${content.id}/like`, {}),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["feed-videos"] });
       showToast({
@@ -38,7 +39,8 @@ export default function FeedOverlay({
   });
 
   const subscribeMutation = useMutation({
-    mutationFn: () => postJson(`/users/${content.creator.id}/subscribe`, {}),
+    mutationFn: () =>
+      postJson(`${BASE_URL}/users/${content.creator.id}/subscribe`, {}),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["feed-videos"] });
       showToast({
@@ -157,8 +159,9 @@ export default function FeedOverlay({
                 onPress={() => likeMutation.mutate()}
                 icon={{
                   name: content.isLiked ? "heart" : "heart-outlined",
-                  color: content.isLiked ? theme.primary : "white",
+                  color: content.isLiked ? "white" : "white",
                   source: "Entypo",
+                  size: "lg",
                 }}
               >
                 <ThemedText color="white" size="sm">
