@@ -1,50 +1,170 @@
-# Welcome to your Expo app 👋
+# VibeSync Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A dynamic social media platform built with Expo React Native, featuring video sharing, community interactions, and real-time messaging.
 
-## Get started
+## 🌟 Features
 
-1. Install dependencies
+### Core Features
 
-   ```bash
-   npm install
-   ```
+- **Video Feed**
+  - TikTok-style vertical scrolling
+  - Auto-playing videos
+  - Like, comment, and share functionality
+  - Video preview thumbnails
 
-2. Start the app
+### Authentication & User Management
 
-   ```bash
-    npx expo start
-   ```
+- Secure authentication system
+- Profile management
+- Account verification system
+- Settings management
 
-In the output, you'll find options to open the app in a
+### Community Features
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- User following/subscription system
+- Content creation and sharing
+- Comments and interactions
+- Real-time notifications
+- Direct messaging
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Premium Features
 
-## Get a fresh project
+- Verified user badges
+- Premium content access
+- Extended upload limits
 
-When you're ready, run:
+## 🛠 Technology Stack
 
-```bash
-npm run reset-project
+- **Framework**: Expo React Native
+- **State Management**:
+  - Zustand for global state
+  - React Query for server state
+- **Navigation**: Expo Router
+- **UI Components**: Custom themed components
+- **API Integration**: Custom fetch utilities
+- **Real-time Features**: Socket.IO
+- **Storage**: Expo SecureStore
+- **Forms**: Custom form hook with Zod validation
+
+## 📱 App Structure
+
+```
+src/
+├── app/                    # Expo Router app directory
+│   ├── (auth)/            # Authentication routes
+│   ├── (tabs)/            # Main app tabs
+│   └── [dynamic]/         # Dynamic routes
+├── components/            # Reusable components
+├── constants/             # App constants and configs
+├── hooks/                 # Custom hooks
+├── stores/                # Zustand stores
+├── types/                 # TypeScript definitions
+└── utils/                 # Utility functions
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 🚀 Getting Started
 
-## Learn more
+### Prerequisites
 
-To learn more about developing your project with Expo, look at the following resources:
+- Node.js 16+
+- npm or yarn
+- Expo CLI
+- iOS Simulator/Android Emulator
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Installation
 
-## Join the community
+```bash
+# Install dependencies
+npm install
 
-Join our community of developers creating universal apps.
+# Start the development server
+npx expo start
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+# Run on iOS
+npm run ios
+
+# Run on Android
+npm run android
+```
+
+### Environment Setup
+
+Create a `.env` file in the root directory:
+
+```env
+BASE_URL=your_api_url
+STRIPE_PUBLISHABLE_KEY=your_stripe_key
+```
+
+## 🔒 Security Features
+
+- JWT Authentication
+- Secure token storage
+- API request encryption
+- Secure file uploads
+- Input validation and sanitization
+
+## 📱 Screens & Navigation
+
+### Authentication Flow
+
+- Login Screen
+- Registration Screen
+- Password Reset
+
+### Main Tabs
+
+- Feed Tab (Video Scrolling)
+- Explore Tab
+- Create Content Tab
+- Community Tab
+- Messages Tab
+
+### Other Screens
+
+- User Profile
+- Settings
+- Content Details
+- Chat Screens
+- Notifications
+
+## 💻 Development
+
+### Code Style
+
+- TypeScript for type safety
+- ESLint configuration
+- Prettier formatting
+- Husky pre-commit hooks
+
+### Testing
+
+```bash
+# Run tests
+npm test
+
+# Run linting
+npm run lint
+```
+
+### Building for Production
+
+```bash
+# Build for iOS
+eas build --platform ios
+
+# Build for Android
+eas build --platform android
+```
+
+## 🤝 Contributing
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details
