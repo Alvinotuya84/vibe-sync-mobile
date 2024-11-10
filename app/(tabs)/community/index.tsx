@@ -84,6 +84,7 @@ export default function CommunityScreen() {
             labelProps={{
               textDecorationLine: "underline",
             }}
+            onPress={() => router.push("/routes/feed")}
           />
         </Box>
         <Box direction="row" gap={10}>

@@ -59,7 +59,6 @@ export default function ThemedMainHeader({
       align="center"
       justify="space-between"
       pa={20}
-      color={theme.background}
       // style={{
       //   shadowColor: theme.shadowColor,
       //   shadowOffset: { width: 0, height: 2 },

@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { io, Socket } from "socket.io-client";
+import { Vibration } from "react-native";
+import { Audio } from "expo-av";
 import { useGlobalNotification } from "./useGlobalNotification";
 import useUserStore from "@/stores/user.store";
 import { BASE_URL } from "@/constants/network";
@@ -17,7 +19,7 @@ export const useNotifications = () => {
       auth: { token },
     });
 
-    socket.on("notification", (notification) => {
+    socket.on("notification", async (notification) => {
       console.log(notification);
       showNotification({
         type: notification.type,
@@ -26,6 +28,20 @@ export const useNotifications = () => {
         route: notification.route,
         data: notification.data,
       });
+
+      // Add haptic feedback
+      Vibration.vibrate([100, 50, 100]);
+
+      // Add sound feedback
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          require("../assets/notification/notification.mp3")
+        );
+        const soundPlayed = await sound.playAsync();
+        console.log(soundPlayed.isLoaded);
+      } catch (error) {
+        console.error("Error playing notification sound:", error);
+      }
     });
 
     return () => {

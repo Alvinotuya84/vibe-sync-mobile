@@ -94,21 +94,22 @@ export default function ChatScreen() {
       header={{
         for: "Tab",
         rightComponent: (
-          <ThemedMainHeader
-            showBackButton={false}
-            rightComponent={
-              <Box direction="row" gap={10}>
-                <ThemedButton type="text" icon={{ name: "heart" }} />
-                <ThemedButton
-                  type="text"
-                  icon={{ name: "search" }}
-                  onPress={() => {
-                    /* Handle search */
-                  }}
-                />
-              </Box>
-            }
-          />
+          <Box bottom={20}>
+            <ThemedMainHeader
+              rightComponent={
+                <Box direction="row" gap={10}>
+                  <ThemedButton type="text" icon={{ name: "heart" }} />
+                  <ThemedButton
+                    type="text"
+                    icon={{ name: "search" }}
+                    onPress={() => {
+                      /* Handle search */
+                    }}
+                  />
+                </Box>
+              }
+            />
+          </Box>
         ),
       }}
     >
@@ -135,7 +136,6 @@ export default function ChatScreen() {
           contentContainerStyle={
             conversations.length === 0 ? { flex: 1 } : undefined
           }
-          ListHeaderComponent={<Box height={20}></Box>}
           ListEmptyComponent={() => (
             <Box flex={1} align="center" justify="center" pa={20}>
               <ThemedText align="center" color={theme.lightText}>

@@ -18,7 +18,7 @@ import ThemedButton from "./ThemedButton";
 import ThemedIcon from "./ThemedIcon";
 import ThemedText from "./ThemedText";
 
-export function BackButton() {
+export function BackButton({ onPress }: { onPress?: () => void }) {
   const platform = Platform.OS;
   const theme = useTheme();
   return (
@@ -27,7 +27,7 @@ export function BackButton() {
         <ThemedButton
           type="text"
           onPress={() => {
-            router.back();
+            onPress ? onPress() : router.back();
           }}
           pa={10}
         >

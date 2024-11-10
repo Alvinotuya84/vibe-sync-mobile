@@ -91,6 +91,7 @@ export default function TabLayout() {
         name="chat"
         options={{
           title: "Chats",
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <ThemedIcon
               name={focused ? "message-square" : "message-square"}

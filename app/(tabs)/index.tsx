@@ -68,7 +68,7 @@ export default function GigsScreen() {
         title: "Gigs Marketplace",
         for: "Tab",
         rightComponent: (
-          <Box pr={50}>
+          <Box pr={30}>
             <ThemedMainHeader showBackButton={false} />
           </Box>
         ),

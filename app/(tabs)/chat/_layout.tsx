@@ -5,7 +5,11 @@ import { Stack } from "expo-router";
 type Props = {};
 
 const ChatLayout = (props: Props) => {
-  return <Stack />;
+  return (
+    <Stack>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+    </Stack>
+  );
 };
 
 export default ChatLayout;

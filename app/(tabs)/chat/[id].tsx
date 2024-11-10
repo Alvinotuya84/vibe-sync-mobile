@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { KeyboardAvoidingView, Platform, FlatList } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import Page from "@/components/Page";
+import Page, { BackButton } from "@/components/Page";
 import Box from "@/components/Box";
 import ChatInput from "@/components/ChatInput"; // Import the ChatInput component
 import { fetchJson, postJson } from "@/utils/fetch.utils";
@@ -38,8 +38,12 @@ export default function ChatDetailScreen() {
     <Page
       header={{
         title: "Chat",
+        for: "Tab",
       }}
     >
+      {/* <Box my={5} align="flex-start">
+        <BackButton />
+      </Box> */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
