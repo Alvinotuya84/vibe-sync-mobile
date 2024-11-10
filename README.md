@@ -1,4 +1,3 @@
-```markdown
 # VibeSync Mobile App
 
 A dynamic social media app platform built with Expo React Native, featuring video sharing, community interactions, and real-time messaging.
@@ -41,6 +40,7 @@ If you encounter any installation problems:
 - X(Formerly Twitter): [@alvinotuya](https://x.com/alvinotuya)
 
 ![App Banner](assets/screenshots/banner.png)
+![](/assets/screenshots/banner.png)
 
 ## 📱 App Screenshots
 
@@ -137,6 +137,7 @@ For developers who want to build from source, see [Development Setup](#-getting-
 - **Storage**: Expo SecureStore
 
 ## 📱 App Structure
+
 ```
 
 src/
@@ -151,17 +152,19 @@ src/
 ├── types/ # TypeScript definitions
 └── utils/ # Utility functions
 
-````
+```
 
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 16+
 - npm or yarn
 - Expo CLI
 - iOS Simulator/Android Emulator
 
 ### Installation
+
 ```bash
 # Install dependencies
 npm install
@@ -174,7 +177,7 @@ npm run ios
 
 # Run on Android
 npm run android
-````
+```
 
 ### Environment Setup
 
@@ -295,7 +298,3 @@ Developed and maintained by [Alvin Otuya](https://www.linkedin.com/in/alvin-otuy
 - [React Native](https://reactnative.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
 - All our contributors and users!
-
-```
-
-```

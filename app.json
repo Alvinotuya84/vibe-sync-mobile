@@ -60,7 +60,7 @@
     "updates": {
       "url": "https://u.expo.dev/5f299cdc-71bd-4686-8b22-1112fefe7169",
       "requestHeaders": {
-        "expo-channel-name": "production-1.0.0"
+        "expo-channel-name": "production-1.0.1"
       }
     }
   }
