@@ -8,11 +8,11 @@ A dynamic social media app platform built with Expo React Native, featuring vide
 
 Get started immediately with the latest version of VibeSync:
 
-[![Download APK](https://img.shields.io/badge/Download-APK-blue.svg?style=for-the-badge&logo=android)](https://drive.google.com/drive/folders/1pwqs0a8lE3yWxwMFhYyLZWL4KnElK3lR?usp=drive_link)
+[![Download APK](https://img.shields.io/badge/Download-APK-blue.svg?style=for-the-badge&logo=android)](https://drive.google.com/file/d/1kOwKE5Q2gOyZ_5MwoazNu2cVt8UzO8aA/view?usp=sharing)
 
 - Latest Version: v1.0.0
 - Release Date: November 10, 2024
-- Size: 45MB
+- Size: 93.2MB
 - Android Requirements: Android 6.0 and above
 
 ### Installation Instructions
@@ -86,6 +86,22 @@ Real-time messaging with other users.
 <div style="display: flex; gap: 10px;">
   <img src="assets/screenshots/chat-1.png" width="200" alt="Chat List">
   <img src="assets/screenshots/chat-2.png" width="200" alt="Chat Detail">
+</div>
+
+Extra Features for App Enhancement
+
+<div style="display: flex; gap: 10px;">
+  <img src="assets/screenshots/extra-features-10.png" width="200" >
+  <img src="assets/screenshots/extra-features-9.png" width="200" >
+  <img src="assets/screenshots/extra-features-1.png" width="200" >
+  <img src="assets/screenshots/extra-features-2.png" width="200" >
+  <img src="assets/screenshots/extra-features-3.png" width="200" >
+  <img src="assets/screenshots/extra-features-4.png" width="200" >
+  <img src="assets/screenshots/extra-features-5.png" width="200" >
+  <img src="assets/screenshots/extra-features-6.png" width="200" >
+  <img src="assets/screenshots/extra-features-7.png" width="200" >
+  <img src="assets/screenshots/extra-features-8.png" width="200" >
+
 </div>
 
 ## ✨ Features
