@@ -1,7 +1,44 @@
 ```markdown
 # VibeSync Mobile App
 
-A dynamic social media platform built with Expo React Native, featuring video sharing, community interactions, and real-time messaging.
+A dynamic social media app platform built with Expo React Native, featuring video sharing, community interactions, and real-time messaging.
+
+## 📲 Download & Installation
+
+### Quick Start - Download APK
+
+Get started immediately with the latest version of VibeSync:
+
+[![Download APK](https://img.shields.io/badge/Download-APK-blue.svg?style=for-the-badge&logo=android)](https://drive.google.com/drive/folders/1pwqs0a8lE3yWxwMFhYyLZWL4KnElK3lR?usp=drive_link)
+
+- Latest Version: v1.0.0
+- Release Date: November 10, 2024
+- Size: 45MB
+- Android Requirements: Android 6.0 and above
+
+### Installation Instructions
+
+1. Download the APK from the link above
+2. Enable "Install from Unknown Sources" in your Android settings
+3. Open the downloaded APK file
+4. Follow the installation prompts
+5. Launch VibeSync and enjoy!
+
+### Features Available in APK:
+
+- ✅ Full Video Feed Experience
+- ✅ Community Interactions
+- ✅ Real-time Chat
+- ✅ Gigs Marketplace
+- ✅ User Profiles
+- ✅ Content Creation
+
+### Having Issues?
+
+If you encounter any installation problems:
+
+- Email: otuyaalvin@gmail.com
+- X(Formerly Twitter): [@alvinotuya](https://x.com/alvinotuya)
 
 ![App Banner](assets/screenshots/banner.png)
 
@@ -82,6 +119,10 @@ Real-time messaging with other users.
 - ✅ Verified user badges
 - 🔒 Premium content access
 - ⬆️ Extended upload limits
+
+### Developer Version
+
+For developers who want to build from source, see [Development Setup](#-getting-started) below.
 
 ## 🛠 Technology Stack
 
