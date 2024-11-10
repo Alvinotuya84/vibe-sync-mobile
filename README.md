@@ -238,8 +238,7 @@ EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_key
 
 - Real-time messaging
 - Message notifications
-- Online status
-- Media sharing
+
 
 ## 🔒 Security Features
 
