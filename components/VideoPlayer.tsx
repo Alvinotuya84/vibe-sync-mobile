@@ -22,6 +22,7 @@ import { postJson } from "@/utils/fetch.utils";
 import { useToast } from "@/components/toast-manager";
 import { BASE_URL } from "@/constants/network";
 import { BackButton } from "./Page";
+import CommentModal from "./CommentModal";
 
 // Add this constant at the top of your file
 const STATUSBAR_HEIGHT =
@@ -49,6 +50,8 @@ export default function VideoPlayer({
   const { showToast } = useToast();
   const queryClient = useQueryClient();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+
   const [showPauseIcon, setShowPauseIcon] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
@@ -161,13 +164,13 @@ export default function VideoPlayer({
         <Video
           ref={videoRef}
           source={{ uri }}
-          style={{ width: "100%", height: "100%" }}
+          style={{ width: "100%", height: SCREEN_HEIGHT }}
           resizeMode={ResizeMode.COVER}
           isLooping
           isMuted={isMuted}
           posterSource={{ uri: thumbnailUri }}
           usePoster
-          posterStyle={{ width: "100%", height: "100%" }}
+          posterStyle={{ width: "100%", height: SCREEN_HEIGHT }}
           shouldPlay={isPlaying && isActive}
           onPlaybackStatusUpdate={onPlaybackStatusUpdate}
         />
@@ -260,7 +263,7 @@ export default function VideoPlayer({
               </Box>
             </Pressable>
 
-            <ThemedButton
+            {/* <ThemedButton
               type="text"
               icon={{ name: "message-circle", color: "white", size: 30 }}
               onPress={() => {
@@ -270,11 +273,18 @@ export default function VideoPlayer({
                   {}
                 ).then((response) => {
                   if (response.success) {
-                    router.push(`/chat/${response?.data?.conversation?.id}`);
+                    router.push(`/chat/${response?.data?.conversation.id}`);
                   }
                 });
               }}
-            />
+            /> */}
+
+            <ThemedButton type="text" onPress={() => setShowComments(true)}>
+              <ThemedIcon name="message-circle" color="white" size={30} />
+              <ThemedText color="white" size="sm">
+                {content.commentsCount}
+              </ThemedText>
+            </ThemedButton>
 
             <Pressable onPress={() => setIsMuted(!isMuted)}>
               <Box align="center">
@@ -285,6 +295,11 @@ export default function VideoPlayer({
                 />
               </Box>
             </Pressable>
+            <CommentModal
+              contentId={content?.id}
+              visible={showComments}
+              onClose={() => setShowComments(false)}
+            />
           </Box>
         )}
 

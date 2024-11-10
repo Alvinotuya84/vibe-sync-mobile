@@ -115,7 +115,16 @@ export default function ProfileScreen() {
             <ThemedButton
               type="surface"
               icon={{ name: "message-circle" }}
-              onPress={() => router.push(`/chat/${id}`)}
+              onPress={() => {
+                // Start a conversation and navigate to it
+                postJson(`${BASE_URL}/chat/start/${id}`, {}).then(
+                  (response) => {
+                    if (response.success) {
+                      router.push(`/chat/${id}`);
+                    }
+                  }
+                );
+              }}
             />
           </Box>
         </Box>

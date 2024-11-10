@@ -1,6 +1,6 @@
 // components/FeedOverlay.tsx
-import React from "react";
-import { Pressable } from "react-native";
+import React, { useState } from "react";
+import { Linking, Pressable, Share } from "react-native";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import Box from "./Box";
@@ -13,6 +13,7 @@ import { postJson } from "@/utils/fetch.utils";
 import type { Content } from "@/types/community.types";
 import { Image } from "expo-image";
 import { BASE_URL } from "@/constants/network";
+import CommentModal from "./CommentModal";
 
 interface FeedOverlayProps {
   content: Content;
@@ -25,6 +26,8 @@ export default function FeedOverlay({
 }: FeedOverlayProps) {
   const theme = useTheme();
   const { showToast } = useToast();
+  const [showComments, setShowComments] = useState(false);
+
   const queryClient = useQueryClient();
 
   const likeMutation = useMutation({
@@ -163,45 +166,52 @@ export default function FeedOverlay({
           {/* Interaction Buttons */}
           <Box direction="row" justify="space-between" align="center">
             <Box direction="row" gap={20}>
-              <ThemedButton
-                type="text"
-                onPress={() => likeMutation.mutate()}
-                icon={{
-                  name: content.isLiked ? "heart" : "heart-outlined",
-                  color: content.isLiked ? "white" : "white",
-                  source: "Entypo",
-                  size: "lg",
-                }}
-              >
+              <ThemedButton type="text" onPress={() => likeMutation.mutate()}>
+                <ThemedIcon
+                  name={content.isLiked ? "heart" : "heart-outlined"}
+                  source="Entypo"
+                  color="white"
+                  size={"sm"}
+                />
+
                 <ThemedText color="white" size="sm">
                   {content.likeCount}
                 </ThemedText>
               </ThemedButton>
 
-              <ThemedButton
-                type="text"
-                onPress={() => router.push(`/community/content/${content.id}`)}
-                icon={{ name: "message-circle", color: "white" }}
-              >
-                <ThemedText color="white" size="sm">
+              <ThemedButton type="text" onPress={() => setShowComments(true)}>
+                <ThemedIcon name="message-circle" color="white" size={"sm"} />
+                <ThemedText color="white" size="xs">
                   {content.commentsCount}
                 </ThemedText>
               </ThemedButton>
 
+              <CommentModal
+                visible={showComments}
+                contentId={content.id}
+                onClose={() => setShowComments(false)}
+              />
               <ThemedButton
                 type="text"
-                icon={{ name: "share", color: "white" }}
-                onPress={() => {
-                  // Implement share functionality
-                  showToast({
-                    title: "Sharing coming soon!",
-                    type: "info",
+                onPress={async () => {
+                  Share.share({
+                    title: content.title,
+                    message: content.description,
+                    url: `${BASE_URL}/${content.mediaPath}`,
                   });
                 }}
-              />
+              >
+                <ThemedIcon
+                  name="share"
+                  size="xl"
+                  color="white"
+                  source="Entypo"
+                />
+                <ThemedText>"</ThemedText>
+              </ThemedButton>
             </Box>
 
-            <Box direction="row" align="center" gap={5}>
+            <Box align="flex-start" gap={5}>
               <ThemedIcon name="eye" size="sm" color="white" />
               <ThemedText color="white" size="sm">
                 {content.viewCount}
