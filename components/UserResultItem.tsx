@@ -6,6 +6,7 @@ import ThemedText from "@/components/ThemedText";
 import ThemedButton from "@/components/ThemedButton";
 import ThemedIcon from "@/components/ThemedIcon";
 import { useTheme } from "@/hooks/useTheme.hook";
+import { BASE_URL } from "@/constants/network";
 
 interface UserResultItemProps {
   user: {
@@ -23,12 +24,12 @@ export default function UserResultItem({ user }: UserResultItemProps) {
   return (
     <ThemedButton
       type="surface"
-      onPress={() => router.push(`/profile/${user.id}`)}
+      onPress={() => router.push(`/routes/profile/${user.id}`)}
     >
       <Box direction="row" gap={10} align="center" pa={10}>
         {user.profileImagePath ? (
           <Image
-            source={{ uri: user.profileImagePath }}
+            source={{ uri: `${BASE_URL}/${user.profileImagePath}` }}
             style={{
               width: 50,
               height: 50,

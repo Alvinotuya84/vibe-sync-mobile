@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Image, KeyboardAvoidingView, Platform } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { Image, KeyboardAvoidingView, Platform, Pressable } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
 import { BlurView } from "expo-blur";
 import { ResizeMode, Video } from "expo-av";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -8,7 +8,9 @@ import Page from "@/components/Page";
 import Box from "@/components/Box";
 import ThemedText from "@/components/ThemedText";
 import ThemedButton from "@/components/ThemedButton";
-import ThemedTextInput from "@/components/ThemedTextInput";
+import ThemedTextInput, {
+  ThemedEmailInput,
+} from "@/components/ThemedTextInput";
 import { fetchJson, postJson } from "@/utils/fetch.utils";
 import { useTheme } from "@/hooks/useTheme.hook";
 import { useToast } from "@/components/toast-manager";
@@ -226,35 +228,55 @@ export default function ContentDetailScreen() {
           {/* Content Info */}
           <Box pa={20} gap={15}>
             <Box direction="row" justify="space-between" align="center">
-              <Box direction="row" align="center" gap={10}>
-                <Image
-                  source={{
-                    uri: `${BASE_URL}/${content.creator?.profileImagePath}`,
-                  }}
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 20,
-                  }}
-                />
-                <Box>
-                  <Box direction="row" align="center" gap={5}>
-                    <ThemedText fontWeight="bold">
-                      {content.creator?.username}
+              <ThemedButton
+                type="text"
+                onPress={() =>
+                  router.push(`/routes/profile/${content.creator.id}`)
+                }
+              >
+                <Box direction="row" align="center" gap={10}>
+                  {content.creator?.profileImagePath ? (
+                    <Image
+                      source={{
+                        uri: `${BASE_URL}/${content.creator?.profileImagePath}`,
+                      }}
+                      style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 20,
+                      }}
+                    />
+                  ) : (
+                    <Image
+                      source={{
+                        uri: "https://via.placeholder.com/40x40",
+                      }}
+                      style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 20,
+                      }}
+                    />
+                  )}
+                  <Box>
+                    <Box direction="row" align="center" gap={5}>
+                      <ThemedText fontWeight="bold">
+                        {content.creator?.username}
+                      </ThemedText>
+                      {content.creator?.isVerified && (
+                        <ThemedIcon
+                          name="check-circle"
+                          size="sm"
+                          color={theme.primary}
+                        />
+                      )}
+                    </Box>
+                    <ThemedText size="xs" color={theme.lightText}>
+                      {new Date(content.createdAt).toLocaleDateString()}
                     </ThemedText>
-                    {content.creator?.isVerified && (
-                      <ThemedIcon
-                        name="check-circle"
-                        size="sm"
-                        color={theme.primary}
-                      />
-                    )}
                   </Box>
-                  <ThemedText size="xs" color={theme.lightText}>
-                    {new Date(content.createdAt).toLocaleDateString()}
-                  </ThemedText>
                 </Box>
-              </Box>
+              </ThemedButton>
 
               {!needsSubscription && (
                 <Box direction="row" gap={15}>

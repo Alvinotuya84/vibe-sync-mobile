@@ -103,9 +103,9 @@ export default function ExploreScreen() {
             {suggestions?.data?.suggestions?.length > 0 && !isSearching && (
               <Box gap={10}>
                 <ThemedText fontWeight="bold">Suggestions</ThemedText>
-                {suggestions.data.suggestions.map((suggestion) => (
+                {suggestions.data.suggestions.map((suggestion, index) => (
                   <ThemedButton
-                    key={suggestion.query}
+                    key={index}
                     type="surface"
                     label={suggestion.query}
                     onPress={() => setSearchQuery(suggestion.query)}

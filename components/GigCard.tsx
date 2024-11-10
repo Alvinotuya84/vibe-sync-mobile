@@ -25,8 +25,8 @@ export default function GigCard({ gig }) {
         <Box flex={1}>
           <Box direction="row" justify="space-between" align="center">
             <ThemedText fontWeight="bold">
-              {gig.creator.username}
-              {gig.creator.isVerified && " ✓"}
+              {gig?.creator?.username}
+              {gig?.creator?.isVerified && " ✓"}
             </ThemedText>
             <ThemedText fontWeight="bold" color={theme.primary}>
               ${gig.price}

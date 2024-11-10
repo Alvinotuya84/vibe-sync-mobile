@@ -80,7 +80,7 @@ export default function GigDetailScreen() {
               <Box>
                 <Box direction="row" align="center" gap={5}>
                   <ThemedText fontWeight="bold">
-                    {gig.creator.username}
+                    {gig?.creator?.username}
                   </ThemedText>
                   {gig.creator.isVerified && (
                     <ThemedIcon

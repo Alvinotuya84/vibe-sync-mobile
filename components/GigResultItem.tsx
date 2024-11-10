@@ -27,12 +27,15 @@ export default function GigResultItem({ gig }: GigResultItemProps) {
   const theme = useTheme();
 
   return (
-    <ThemedButton type="surface" onPress={() => router.push(`/gigs/${gig.id}`)}>
+    <ThemedButton
+      type="surface"
+      onPress={() => router.push(`/routes/gigs/${gig.id}`)}
+    >
       <Box pa={10} gap={10}>
         <Box direction="row" align="center" justify="space-between">
           <Box direction="row" align="center" gap={5}>
             <ThemedText size="sm" color={theme.lightText}>
-              {gig.creator.username}
+              {gig.creator?.username}
             </ThemedText>
             {gig.creator.isVerified && (
               <ThemedIcon name="check-circle" size="xs" color={theme.primary} />

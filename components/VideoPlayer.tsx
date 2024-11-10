@@ -270,7 +270,7 @@ export default function VideoPlayer({
                   {}
                 ).then((response) => {
                   if (response.success) {
-                    router.push(`/chat/${response?.data.conversation.id}`);
+                    router.push(`/chat/${response?.data?.conversation?.id}`);
                   }
                 });
               }}

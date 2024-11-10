@@ -79,9 +79,7 @@ export default function FeedOverlay({
         <>
           {/* Creator Info */}
           <Pressable
-            onPress={() =>
-              router.push(`/community/profile/${content.creator.id}`)
-            }
+            onPress={() => router.push(`/routes/profile/${content.creator.id}`)}
           >
             <Box direction="row" align="center" gap={10}>
               <Box
@@ -91,10 +89,21 @@ export default function FeedOverlay({
                 overflow="hidden"
                 color={theme.surface}
               >
-                {content.creator.profileImagePath && (
+                {content.creator.profileImagePath ? (
                   <Image
-                    source={{ uri: content.creator.profileImagePath }}
+                    source={{ uri: content.creator?.profileImagePath }}
                     style={{ width: "100%", height: "100%" }}
+                  />
+                ) : (
+                  <Image
+                    source={{
+                      uri: "https://via.placeholder.com/40x40",
+                    }}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 20,
+                    }}
                   />
                 )}
               </Box>

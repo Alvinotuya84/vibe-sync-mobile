@@ -527,7 +527,7 @@ export async function fetchWithParams<T>(
 const handleSessionExpiry = (response: Response) => {
   // alert(response.status);
   // alert(response.status + "response info");
-  if (response.status == 403 || response.status == 404) {
+  if (response.status == 403) {
     // FlashMessage("Session expired, please login again", "danger");
     // // alert("refetching");
     // //  response.json().then((data) => console.log();

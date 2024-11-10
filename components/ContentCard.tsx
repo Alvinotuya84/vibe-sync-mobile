@@ -75,12 +75,11 @@ export default function ContentCard({ content }: ContentCardProps) {
       }}
     >
       {/* Header */}
-      <Box direction="row" pa={15} gap={10} align="center">
-        <Pressable
-          onPress={() =>
-            router.push(`/community/profile/${content.creator.id}`)
-          }
-        >
+      <ThemedButton
+        type="text"
+        onPress={() => router.push(`/routes/profile/${content.creator.id}`)}
+      >
+        <Box direction="row" pa={15} gap={10} align="center">
           <Box width={40} height={40} radius={20} overflow="hidden">
             <Image
               source={{ uri: profileImageUrl }}
@@ -88,31 +87,34 @@ export default function ContentCard({ content }: ContentCardProps) {
               onError={handleImageError}
             />
           </Box>
-        </Pressable>
 
-        <Box flex={1}>
-          <Box direction="row" align="center" gap={5}>
-            <ThemedText size="sm" fontWeight="bold">
-              {content.creator.username}
+          <Box flex={1}>
+            <Box direction="row" align="center" gap={5}>
+              <ThemedText size="sm" fontWeight="bold">
+                {content.creator.username}
+              </ThemedText>
+              {content.creator.isVerified && (
+                <ThemedIcon
+                  name="check-circle"
+                  size="sm"
+                  color={theme.primary}
+                />
+              )}
+            </Box>
+            <ThemedText size="xs" color={theme.lightText}>
+              {new Date(content.createdAt).toLocaleDateString()}
             </ThemedText>
-            {content.creator.isVerified && (
-              <ThemedIcon name="check-circle" size="sm" color={theme.primary} />
-            )}
           </Box>
-          <ThemedText size="xs" color={theme.lightText}>
-            {new Date(content.createdAt).toLocaleDateString()}
-          </ThemedText>
+
+          <ThemedButton
+            type="text"
+            icon={{ name: "more-vertical" }}
+            onPress={() => {
+              // Show options menu
+            }}
+          />
         </Box>
-
-        <ThemedButton
-          type="text"
-          icon={{ name: "more-vertical" }}
-          onPress={() => {
-            // Show options menu
-          }}
-        />
-      </Box>
-
+      </ThemedButton>
       {/* Content */}
       <Pressable
         onPress={() => router.push(`/community/content/${content.id}`)}

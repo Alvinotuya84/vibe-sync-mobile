@@ -175,21 +175,22 @@ export default function CommunityScreen() {
     <Page
       header={{
         rightComponent: (
-          <ThemedMainHeader
-            showBackButton={false}
-            rightComponent={
-              <Box direction="row" gap={10}>
-                <ThemedButton type="text" icon={{ name: "heart" }} />
-                <ThemedButton
-                  type="text"
-                  icon={{ name: "search" }}
-                  onPress={() => {
-                    /* Handle search */
-                  }}
-                />
-              </Box>
-            }
-          />
+          <Box bottom={15}>
+            <ThemedMainHeader
+              rightComponent={
+                <Box direction="row" gap={10}>
+                  <ThemedButton type="text" icon={{ name: "heart" }} />
+                  <ThemedButton
+                    type="text"
+                    icon={{ name: "search" }}
+                    onPress={() => {
+                      router.push("/explore");
+                    }}
+                  />
+                </Box>
+              }
+            />
+          </Box>
         ),
       }}
     >
