@@ -8,10 +8,27 @@ import { useTheme } from "@/hooks/useTheme.hook";
 import { formatDistanceToNow } from "date-fns";
 import { BASE_URL } from "@/constants/network";
 import ThemedIcon from "./ThemedIcon";
+import { postJson } from "@/utils/fetch.utils";
+import { useMutation } from "@tanstack/react-query";
+import { useToast } from "./toast-manager";
 
 export default function GigCard({ gig }) {
   const theme = useTheme();
-
+  const { showToast } = useToast();
+  const contactMutation = useMutation({
+    mutationFn: () =>
+      postJson(`${BASE_URL}/chat/start/${gig?.creator?.id}`, {}),
+    onSuccess: (response) => {
+      if (response.success) {
+        router.push(`/chat/${response?.data?.conversation.id}`);
+      } else {
+        showToast({
+          title: response.message,
+          type: "error",
+        });
+      }
+    },
+  });
   return (
     <Box pa={15} radius={10} color={theme.surface} gap={15}>
       <Box direction="row" gap={10} align="center">
@@ -76,7 +93,8 @@ export default function GigCard({ gig }) {
         <ThemedButton
           type="primary"
           label="Contact"
-          onPress={() => router.push(`/chat/${gig.creator.id}`)}
+          loading={contactMutation.isPending}
+          onPress={() => contactMutation.mutate()}
           flex={1}
         />
         <ThemedButton

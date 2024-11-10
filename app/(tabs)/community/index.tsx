@@ -8,6 +8,7 @@ import Page from "@/components/Page";
 import Box from "@/components/Box";
 import ThemedText from "@/components/ThemedText";
 import ThemedButton from "@/components/ThemedButton";
+import OptionsModal from "@/components/OptionsModal";
 import { fetchJson } from "@/utils/fetch.utils";
 import { Content } from "@/types/community.types";
 import { useTheme } from "@/hooks/useTheme.hook";
@@ -25,6 +26,8 @@ export default function CommunityScreen() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]>("For you");
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedContent, setSelectedContent] = useState<Content | null>(null);
+  const [showOptions, setShowOptions] = useState(false);
 
   const formatTabForQuery = (tab: string) =>
     tab.toLowerCase().replace(/\s+/g, "-");
@@ -72,20 +75,32 @@ export default function CommunityScreen() {
   const VideoPreviewSection = () => {
     const videos = previewsData?.data?.videos || [];
 
-    // if (!videos.length) return null;
-
     return (
       <Box px={20} py={10} borderTopWidth={5} borderColor={"grey"}>
         <Box mb={10} direction="row" justify="space-between" align="center">
           <ThemedText fontWeight="bold">CLIPS</ThemedText>
-          <ThemedButton
-            type="text"
-            label={"View All "}
-            labelProps={{
-              textDecorationLine: "underline",
-            }}
-            onPress={() => router.push("/routes/feed")}
-          />
+          <Box direction="row" align="center" gap={10}>
+            <ThemedButton
+              type="text"
+              label={"View All "}
+              labelProps={{
+                textDecorationLine: "underline",
+              }}
+              onPress={() => router.push("/routes/feed")}
+            />
+            {videos.length > 0 && (
+              <ThemedButton
+                type="text"
+                icon={{ name: "more-vertical", color: "white" }}
+                onPress={() => {
+                  if (videos[0]) {
+                    setSelectedContent(videos[0]);
+                    setShowOptions(true);
+                  }
+                }}
+              />
+            )}
+          </Box>
         </Box>
         <Box direction="row" gap={10}>
           {videos.map((video) => (
@@ -116,18 +131,30 @@ export default function CommunityScreen() {
                     backgroundColor: "rgba(0,0,0,0.5)",
                   }}
                 >
-                  <ThemedText
-                    color="white"
-                    size="sm"
-                    textProps={{
-                      numberOfLines: 1,
-                    }}
-                  >
-                    {video.title}
-                  </ThemedText>
-                  <ThemedText color="white" size="xs">
-                    {video.creator.username}
-                  </ThemedText>
+                  <Box direction="row" justify="space-between" align="center">
+                    <Box flex={1}>
+                      <ThemedText
+                        color="white"
+                        size="sm"
+                        textProps={{
+                          numberOfLines: 1,
+                        }}
+                      >
+                        {video.title}
+                      </ThemedText>
+                      <ThemedText color="white" size="xs">
+                        {video.creator.username}
+                      </ThemedText>
+                    </Box>
+                    <ThemedButton
+                      type="text"
+                      icon={{ name: "more-vertical", color: "white" }}
+                      onPress={() => {
+                        setSelectedContent(video);
+                        setShowOptions(true);
+                      }}
+                    />
+                  </Box>
                 </Box>
               </Box>
             </Pressable>
@@ -172,50 +199,70 @@ export default function CommunityScreen() {
   };
 
   return (
-    <Page
-      header={{
-        rightComponent: (
-          <Box bottom={15}>
-            <ThemedMainHeader
-              rightComponent={
-                <Box direction="row" gap={10}>
-                  <ThemedButton type="text" icon={{ name: "heart" }} />
-                  <ThemedButton
-                    type="text"
-                    icon={{ name: "search" }}
-                    onPress={() => {
-                      router.push("/explore");
-                    }}
-                  />
-                </Box>
-              }
-            />
-          </Box>
-        ),
-      }}
-    >
-      <Box
-        py={10}
-        px={20}
-        color={theme.background}
-        style={{ paddingTop: insets.top }}
-      >
-        <Box gap={20}>
-          <Box direction="row" gap={10}>
-            {TABS.map((tab) => (
-              <ThemedButton
-                key={tab}
-                type={activeTab === tab ? "primary" : "surface"}
-                label={tab}
-                onPress={() => handleTabChange(tab)}
-                size="sm"
+    <>
+      <Page
+        header={{
+          rightComponent: (
+            <Box bottom={15}>
+              <ThemedMainHeader
+                rightComponent={
+                  <Box direction="row" gap={10}>
+                    <ThemedButton type="text" icon={{ name: "heart" }} />
+                    <ThemedButton
+                      type="text"
+                      icon={{ name: "search" }}
+                      onPress={() => {
+                        router.push("/explore");
+                      }}
+                    />
+                  </Box>
+                }
               />
-            ))}
+            </Box>
+          ),
+        }}
+      >
+        <Box
+          py={10}
+          px={20}
+          color={theme.background}
+          style={{ paddingTop: insets.top }}
+        >
+          <Box gap={20}>
+            <Box direction="row" gap={10}>
+              {TABS.map((tab) => (
+                <ThemedButton
+                  key={tab}
+                  type={activeTab === tab ? "primary" : "surface"}
+                  label={tab}
+                  onPress={() => handleTabChange(tab)}
+                  size="sm"
+                />
+              ))}
+            </Box>
           </Box>
         </Box>
-      </Box>
 
-      {renderContent()}
-    </Page>
+        {renderContent()}
+      </Page>
+
+      {selectedContent && (
+        <OptionsModal
+          visible={showOptions}
+          onClose={() => {
+            setShowOptions(false);
+            setSelectedContent(null);
+          }}
+          contentId={selectedContent.id}
+          contentType="post"
+          creatorId={selectedContent.creator.id}
+          creatorUsername={selectedContent.creator.username}
+          onContentDelete={() => {
+            queryClient.invalidateQueries({ queryKey: ["community"] });
+            queryClient.invalidateQueries({ queryKey: ["video-previews"] });
+          }}
+        />
+      )}
+    </>
   );
 }

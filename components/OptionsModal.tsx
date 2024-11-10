@@ -11,6 +11,7 @@ import useUserStore from "@/stores/user.store";
 import { postJson } from "@/utils/fetch.utils";
 import { BASE_URL } from "@/constants/network";
 import { BlockConfirmationModal } from "./BlockConfirmationModal";
+import { Share } from "react-native";
 
 interface OptionsModalProps {
   visible: boolean;
@@ -170,8 +171,17 @@ export default function OptionsModal({
             icon={{ name: "share" }}
             label="Share"
             onPress={() => {
-              // Implement share
-              onClose();
+              Share.share({
+                title: contentType,
+                message: "Share this",
+                url: `${BASE_URL}/content/${contentId}`,
+              })
+                .then(() => {
+                  onClose();
+                })
+                .catch(() => {
+                  onClose();
+                });
             }}
             wrapperProps={{ justify: "flex-start" }}
           />

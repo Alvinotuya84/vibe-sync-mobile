@@ -103,7 +103,7 @@ export default function ChatScreen() {
                     type="text"
                     icon={{ name: "search" }}
                     onPress={() => {
-                      /* Handle search */
+                      router.push("/explore");
                     }}
                   />
                 </Box>

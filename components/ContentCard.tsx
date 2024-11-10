@@ -150,7 +150,7 @@ export default function ContentCard({ content }: ContentCardProps) {
             contentId={content.id}
             contentType="post"
             creatorId={content.creator.id}
-            creatorUsername={content.creator.username}
+            creatorUsername={content?.creator?.username}
             onContentDelete={() => {
               // Handle content deletion if needed
               router.back();

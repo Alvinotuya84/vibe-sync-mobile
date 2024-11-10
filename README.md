@@ -1,12 +1,62 @@
+```markdown
 # VibeSync Mobile App
 
 A dynamic social media platform built with Expo React Native, featuring video sharing, community interactions, and real-time messaging.
 
-## 🌟 Features
+![App Banner](assets/screenshots/banner.png)
+
+## 📱 App Screenshots
+
+### Feed Tab
+
+Scroll through engaging video content in a TikTok-style interface.
+
+<div style="display: flex; gap: 10px;">
+  <img src="assets/screenshots/feed-1.png" width="200" alt="Feed Screen">
+  <img src="assets/screenshots/feed-2.png" width="200" alt="Feed with Comments">
+</div>
+
+### Explore Tab
+
+Discover new content and creators through our powerful search.
+
+<div style="display: flex; gap: 10px;">
+  <img src="assets/screenshots/explore-1.png" width="200" alt="Explore Screen">
+  <img src="assets/screenshots/explore-2.png" width="200" alt="Search Results">
+</div>
+
+### Community Tab
+
+Connect with creators and engage with their content.
+
+<div style="display: flex; gap: 10px;">
+  <img src="assets/screenshots/community-1.png" width="200" alt="Community Feed">
+  <img src="assets/screenshots/community-2.png" width="200" alt="Content Detail">
+</div>
+
+### Gigs Tab
+
+Browse and post freelance opportunities.
+
+<div style="display: flex; gap: 10px;">
+  <img src="assets/screenshots/gigs-1.png" width="200" alt="Gigs Marketplace">
+  <img src="assets/screenshots/gigs-2.png" width="200" alt="Gig Detail">
+</div>
+
+### Chat Tab
+
+Real-time messaging with other users.
+
+<div style="display: flex; gap: 10px;">
+  <img src="assets/screenshots/chat-1.png" width="200" alt="Chat List">
+  <img src="assets/screenshots/chat-2.png" width="200" alt="Chat Detail">
+</div>
+
+## ✨ Features
 
 ### Core Features
 
-- **Video Feed**
+- 📹 Video Feed
   - TikTok-style vertical scrolling
   - Auto-playing videos
   - Like, comment, and share functionality
@@ -14,24 +64,24 @@ A dynamic social media platform built with Expo React Native, featuring video sh
 
 ### Authentication & User Management
 
-- Secure authentication system
-- Profile management
-- Account verification system
-- Settings management
+- 🔐 Secure authentication system
+- 👤 Profile management
+- ✓ Account verification system
+- ⚙️ Settings management
 
 ### Community Features
 
-- User following/subscription system
-- Content creation and sharing
-- Comments and interactions
-- Real-time notifications
-- Direct messaging
+- 🤝 User following/subscription system
+- 📝 Content creation and sharing
+- 💬 Comments and interactions
+- 🔔 Real-time notifications
+- 📨 Direct messaging
 
 ### Premium Features
 
-- Verified user badges
-- Premium content access
-- Extended upload limits
+- ✅ Verified user badges
+- 🔒 Premium content access
+- ⬆️ Extended upload limits
 
 ## 🛠 Technology Stack
 
@@ -44,35 +94,33 @@ A dynamic social media platform built with Expo React Native, featuring video sh
 - **API Integration**: Custom fetch utilities
 - **Real-time Features**: Socket.IO
 - **Storage**: Expo SecureStore
-- **Forms**: Custom form hook with Zod validation
 
 ## 📱 App Structure
+```
 
-```
 src/
-├── app/                    # Expo Router app directory
-│   ├── (auth)/            # Authentication routes
-│   ├── (tabs)/            # Main app tabs
-│   └── [dynamic]/         # Dynamic routes
-├── components/            # Reusable components
-├── constants/             # App constants and configs
-├── hooks/                 # Custom hooks
-├── stores/                # Zustand stores
-├── types/                 # TypeScript definitions
-└── utils/                 # Utility functions
-```
+├── app/ # Expo Router app directory
+│ ├── (auth)/ # Authentication routes
+│ ├── (tabs)/ # Main app tabs
+│ └── [dynamic]/ # Dynamic routes
+├── components/ # Reusable components
+├── constants/ # App constants and configs
+├── hooks/ # Custom hooks
+├── stores/ # Zustand stores
+├── types/ # TypeScript definitions
+└── utils/ # Utility functions
+
+````
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-
 - Node.js 16+
 - npm or yarn
 - Expo CLI
 - iOS Simulator/Android Emulator
 
 ### Installation
-
 ```bash
 # Install dependencies
 npm install
@@ -85,7 +133,7 @@ npm run ios
 
 # Run on Android
 npm run android
-```
+````
 
 ### Environment Setup
 
@@ -96,46 +144,64 @@ BASE_URL=your_api_url
 STRIPE_PUBLISHABLE_KEY=your_stripe_key
 ```
 
+## 📱 Main Features Walkthrough
+
+### Video Feed
+
+- Vertical scrolling interface
+- Auto-playing videos
+- Double-tap to like
+- Share functionality
+- Comment system
+
+### Explore
+
+- Search for users, posts, and gigs
+- Filter by content type
+- Recent searches history
+- Trending content
+
+### Community
+
+- Post creation
+- User interactions
+- Content moderation
+- Reporting system
+
+### Gigs
+
+- Marketplace interface
+- Gig creation
+- Filtering system
+- Contact integration
+
+### Chat
+
+- Real-time messaging
+- Message notifications
+- Online status
+- Media sharing
+
 ## 🔒 Security Features
 
 - JWT Authentication
 - Secure token storage
 - API request encryption
-- Secure file uploads
 - Input validation and sanitization
-
-## 📱 Screens & Navigation
-
-### Authentication Flow
-
-- Login Screen
-- Registration Screen
-- Password Reset
-
-### Main Tabs
-
-- Feed Tab (Video Scrolling)
-- Explore Tab
-- Create Content Tab
-- Community Tab
-- Messages Tab
-
-### Other Screens
-
-- User Profile
-- Settings
-- Content Details
-- Chat Screens
-- Notifications
 
 ## 💻 Development
 
 ### Code Style
 
-- TypeScript for type safety
-- ESLint configuration
-- Prettier formatting
-- Husky pre-commit hooks
+We follow strict coding standards:
+
+```bash
+# Run linting
+npm run lint
+
+# Run type checking
+npm run typecheck
+```
 
 ### Testing
 
@@ -143,8 +209,8 @@ STRIPE_PUBLISHABLE_KEY=your_stripe_key
 # Run tests
 npm test
 
-# Run linting
-npm run lint
+# Run with coverage
+npm run test:coverage
 ```
 
 ### Building for Production
@@ -168,3 +234,27 @@ eas build --platform android
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details
+
+## 📞 Support
+
+For support, please contact:
+
+- Email: otuyaalvin@gmail.com
+- X(Formerly Twitter): [@alvinotuya](https://x.com/alvinotuya)
+- LinkedIn: [Alvin Otuya](https://www.linkedin.com/in/alvin-otuya-3744b7257/)
+
+## 🙌 Author & Maintainer
+
+Developed and maintained by [Alvin Otuya](https://www.linkedin.com/in/alvin-otuya-3744b7257/)
+
+## 🙏 Acknowledgments
+
+- [Alvin Otuya](https://www.linkedin.com/in/alvin-otuya-3744b7257/) - Creator & Main Developer
+- [Expo](https://expo.dev/)
+- [React Native](https://reactnative.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- All our contributors and users!
+
+```
+
+```

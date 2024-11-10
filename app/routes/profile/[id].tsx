@@ -24,7 +24,19 @@ export default function ProfileScreen() {
     queryKey: ["profile", id],
     queryFn: () => fetchJson(`${BASE_URL}/users/${id}/profile`),
   });
-
+  const startChatMutation = useMutation({
+    mutationFn: () => postJson(`${BASE_URL}/chat/start/${id}`, {}),
+    onSuccess: (response) => {
+      if (response.success) {
+        router.push(`/chat/${response?.data?.conversation.id}`);
+      } else {
+        showToast({
+          title: response.message,
+          type: "error",
+        });
+      }
+    },
+  });
   const subscriptionMutation = useMutation({
     mutationFn: () => postJson(`${BASE_URL}/users/${id}/subscribe`, {}),
     onSuccess: (response) => {
@@ -122,16 +134,8 @@ export default function ProfileScreen() {
             <ThemedButton
               type="surface"
               icon={{ name: "message-circle" }}
-              onPress={() => {
-                // Start a conversation and navigate to it
-                postJson(`${BASE_URL}/chat/start/${id}`, {}).then(
-                  (response) => {
-                    if (response.success) {
-                      router.push(`/chat/${id}`);
-                    }
-                  }
-                );
-              }}
+              loading={startChatMutation.isPending}
+              onPress={() => startChatMutation.mutate()}
             />
           </Box>
         </Box>
