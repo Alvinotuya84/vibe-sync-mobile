@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Image, KeyboardAvoidingView, Platform, Pressable } from "react-native";
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  Share,
+} from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { BlurView } from "expo-blur";
 import { ResizeMode, Video } from "expo-av";
@@ -290,12 +296,21 @@ export default function ContentDetailScreen() {
                   >
                     <ThemedText size="sm">{content.likesCount}</ThemedText>
                   </ThemedButton>
-
+                  {/* <ThemedIcon
+                  name="share"
+                  size="xl"
+                  color="white"
+                  source="Entypo"
+                /> */}
                   <ThemedButton
                     type="text"
-                    icon={{ name: "share" }}
-                    onPress={() => {
-                      // Implement share
+                    icon={{ name: "share", source: "Entypo", size: "xl" }}
+                    onPress={async () => {
+                      Share.share({
+                        title: content.title,
+                        message: content.description,
+                        url: `${BASE_URL}/${content.mediaPath}`,
+                      });
                     }}
                   />
                 </Box>

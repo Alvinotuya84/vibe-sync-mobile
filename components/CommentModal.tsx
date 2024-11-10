@@ -199,7 +199,7 @@ export default function CommentModal({
           >
             <ThemedTextInput
               wrapper={{
-                width: "100%",
+                width: 200,
               }}
               placeholder={
                 replyTo ? `Reply to ${replyTo.username}...` : "Add a comment..."

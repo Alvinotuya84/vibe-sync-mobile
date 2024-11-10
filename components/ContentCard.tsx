@@ -1,6 +1,6 @@
 // app/(tabs)/community/components/ContentCard.tsx
-import React from "react";
-import { Image, Pressable } from "react-native";
+import React, { useState } from "react";
+import { Image, Pressable, Share } from "react-native";
 import { router } from "expo-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BlurView } from "expo-blur";
@@ -13,6 +13,9 @@ import { useTheme } from "@/hooks/useTheme.hook";
 import { postJson } from "@/utils/fetch.utils";
 import { useToast } from "@/components/toast-manager";
 import { BASE_URL } from "@/constants/network";
+import { formatDistanceToNow } from "date-fns";
+import useUserStore from "@/stores/user.store";
+import OptionsModal from "./OptionsModal";
 
 interface ContentCardProps {
   content: Content;
@@ -20,6 +23,10 @@ interface ContentCardProps {
 
 export default function ContentCard({ content }: ContentCardProps) {
   const theme = useTheme();
+  const [showOptions, setShowOptions] = useState(false);
+
+  const currentUser = useUserStore((state) => state.user);
+
   const { showToast } = useToast();
   const queryClient = useQueryClient();
 
@@ -45,6 +52,31 @@ export default function ContentCard({ content }: ContentCardProps) {
       });
     },
   });
+  const blockMutation = useMutation({
+    mutationFn: () =>
+      postJson(`${BASE_URL}/users/${content.creator.id}/block`, {}),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["community"] });
+      showToast({
+        title: `Blocked ${content.creator.username}`,
+        type: "success",
+      });
+      setShowOptions(false);
+    },
+    onError: (error) => {
+      showToast({
+        title: "Failed to block user",
+        type: "error",
+      });
+    },
+  });
+
+  const handleBlock = () => {
+    setShowOptions(false);
+  };
+
+  const isOwnContent = currentUser?.id === content.creator.id;
+
   const profileImageUrl =
     content.creator?.profileImageUrl || "https://via.placeholder.com/40";
 
@@ -91,9 +123,9 @@ export default function ContentCard({ content }: ContentCardProps) {
           <Box flex={1}>
             <Box direction="row" align="center" gap={5}>
               <ThemedText size="sm" fontWeight="bold">
-                {content.creator.username}
+                {content?.creator?.username}
               </ThemedText>
-              {content.creator.isVerified && (
+              {content?.creator?.isVerified && (
                 <ThemedIcon
                   name="check-circle"
                   size="sm"
@@ -102,17 +134,33 @@ export default function ContentCard({ content }: ContentCardProps) {
               )}
             </Box>
             <ThemedText size="xs" color={theme.lightText}>
-              {new Date(content.createdAt).toLocaleDateString()}
+              {formatDistanceToNow(new Date(content?.createdAt))}
             </ThemedText>
           </Box>
 
           <ThemedButton
             type="text"
             icon={{ name: "more-vertical" }}
-            onPress={() => {
-              // Show options menu
+            onPress={() => setShowOptions(true)}
+          />
+          <OptionsModal
+            visible={showOptions}
+            onClose={() => setShowOptions(false)}
+            contentId={content.id}
+            contentType="post"
+            creatorId={content.creator.id}
+            creatorUsername={content.creator.username}
+            onContentDelete={() => {
+              // Handle content deletion if needed
+              router.back();
             }}
           />
+          {/* <BlockConfirmationModal
+        visible={showBlockConfirmation}
+        onClose={() => setShowBlockConfirmation(false)}
+        onConfirm={() => blockMutation.mutate()}
+        username={content.creator.username}
+      /> */}
         </Box>
       </ThemedButton>
       {/* Content */}
@@ -179,38 +227,41 @@ export default function ContentCard({ content }: ContentCardProps) {
         )}
 
         <Box direction="row" justify="space-between" align="center">
-          <Box direction="row" gap={15}>
-            <ThemedButton
-              type="text"
-              icon={{
-                name: content.isLiked ? "heart" : "heart-outline",
-                color: content.isLiked ? theme.primary : theme.text,
-              }}
-              onPress={() => likeMutation.mutate()}
-            >
-              <ThemedText size="sm">{content.likesCount}</ThemedText>
+          <Box direction="row" gap={15} align="center">
+            <ThemedButton type="text" onPress={() => likeMutation.mutate()}>
+              <ThemedIcon
+                name={content?.isLiked ? "heart" : "heart-outlined"}
+                source="Entypo"
+                color={content.isLiked ? theme.primary : theme.text}
+              />
+
+              <ThemedText size="sm">{content?.likeCount}</ThemedText>
             </ThemedButton>
 
             <ThemedButton
               type="text"
-              icon={{ name: "message-circle" }}
               onPress={() => router.push(`/community/content/${content.id}`)}
             >
+              <ThemedIcon name={"message-circle"} />
               <ThemedText size="sm">{content.commentsCount}</ThemedText>
             </ThemedButton>
 
             <ThemedButton
               type="text"
-              icon={{ name: "share" }}
-              onPress={() => {
-                // Implement share
+              icon={{ name: "share", source: "Entypo", size: "xxl" }}
+              onPress={async () => {
+                Share.share({
+                  title: content.title,
+                  message: content.description,
+                  url: `${BASE_URL}/${content.mediaPath}`,
+                });
               }}
             />
             {/* <ThemedText>{JSON.stringify(content.creator)}</ThemedText> */}
           </Box>
 
           <ThemedText size="sm" color={theme.lightText}>
-            {content.viewsCount} views
+            {content?.viewCount} views
           </ThemedText>
         </Box>
       </Box>
