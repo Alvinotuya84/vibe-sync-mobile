@@ -6,6 +6,7 @@ import { formatDistanceToNow } from "date-fns";
 import { useTheme } from "@/hooks/useTheme.hook";
 import useUserStore from "@/stores/user.store";
 import { BASE_URL } from "@/constants/network";
+import ThemedIcon from "./ThemedIcon";
 
 export interface Conversation {
   id: string;
@@ -75,7 +76,17 @@ export default function ConversationItem({
                 {otherParticipant.username}
               </ThemedText>
               {otherParticipant.isVerified && (
-                <ThemedText color={theme.primary}>✓</ThemedText>
+                // <ThemedText color={theme.primary}>✓</ThemedText>
+                <ThemedIcon
+                  style={{
+                    left: -5,
+                    bottom: 3,
+                  }}
+                  name="verified"
+                  size="sm"
+                  color={theme.primary}
+                  source="MaterialIcons"
+                />
               )}
             </Box>
             {conversation.lastMessage && (

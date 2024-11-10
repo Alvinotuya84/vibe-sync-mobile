@@ -53,7 +53,16 @@ export default function UserResultItem({ user }: UserResultItemProps) {
           <Box direction="row" align="center" gap={5}>
             <ThemedText fontWeight="bold">{user.username}</ThemedText>
             {user.isVerified && (
-              <ThemedIcon name="check-circle" size="sm" color={theme.primary} />
+              <ThemedIcon
+                style={{
+                  left: -5,
+                  bottom: 3,
+                }}
+                name="verified"
+                size="sm"
+                color={theme.primary}
+                source="MaterialIcons"
+              />
             )}
           </Box>
           {user.bio && (

@@ -80,7 +80,17 @@ export default function CommentModal({
               {comment.user.username}
             </ThemedText>
             {comment.user.isVerified && (
-              <ThemedIcon name="check-circle" size="xs" color={theme.primary} />
+              <ThemedIcon
+                // style={{
+                //   left: -5,
+                //   bottom: 3,
+                // }}
+                name="verified"
+                size="xs"
+                color={theme.primary}
+                source="MaterialIcons"
+              />
+              // <ThemedIcon name="check-circle" size="xs" color={theme.primary} />
             )}
             <ThemedText size="xs" color={theme.lightText}>
               •{" "}

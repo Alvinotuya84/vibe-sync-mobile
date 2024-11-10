@@ -121,10 +121,16 @@ export default function ThemedMainHeader({
                     color={theme.background}
                   >
                     <ThemedIcon
+                      name="verified"
+                      size="sm"
+                      source="MaterialIcons"
+                      color={theme.primary}
+                    />
+                    {/* <ThemedIcon
                       name="check-circle"
                       size="sm"
                       color={theme.primary}
-                    />
+                    /> */}
                   </Box>
                 )}
               </Box>

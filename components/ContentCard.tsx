@@ -127,8 +127,9 @@ export default function ContentCard({ content }: ContentCardProps) {
               </ThemedText>
               {content?.creator?.isVerified && (
                 <ThemedIcon
-                  name="check-circle"
+                  name="verified"
                   size="sm"
+                  source="MaterialIcons"
                   color={theme.primary}
                 />
               )}

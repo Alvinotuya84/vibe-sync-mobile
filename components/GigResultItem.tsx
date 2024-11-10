@@ -38,7 +38,13 @@ export default function GigResultItem({ gig }: GigResultItemProps) {
               {gig.creator?.username}
             </ThemedText>
             {gig.creator.isVerified && (
-              <ThemedIcon name="check-circle" size="xs" color={theme.primary} />
+              <ThemedIcon
+                name="verified"
+                size="xs"
+                source="MaterialIcons"
+                color={theme.primary}
+              />
+              // <ThemedIcon name="check-circle" size="xs" color={theme.primary} />
             )}
             <ThemedText size="xs" color={theme.lightText}>
               •{" "}

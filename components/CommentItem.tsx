@@ -38,7 +38,13 @@ export default function CommentItem({ comment, onReply }: CommentItemProps) {
           <Box direction="row" align="center" gap={5}>
             <ThemedText fontWeight="bold">{comment.user.username}</ThemedText>
             {comment.user.isVerified && (
-              <ThemedIcon name="check-circle" size="xs" color={theme.primary} />
+              <ThemedIcon
+                name="verified"
+                size="xs"
+                source="MaterialIcons"
+                color={theme.primary}
+              />
+              // <ThemedIcon name="check-circle" size="xs" color={theme.primary} />
             )}
             <ThemedText size="xs" color={theme.lightText}>
               • {new Date(comment.createdAt).toLocaleDateString()}

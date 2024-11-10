@@ -42,7 +42,17 @@ function VerificationBenefitItem({
 
   return (
     <Box direction="row" gap={10} align="center">
-      <ThemedIcon name="check-circle" color={theme.primary} size={24} />
+      <ThemedIcon
+        // style={{
+        //   left: -5,
+        //   bottom: 3,
+        // }}
+
+        name="verified"
+        size={24}
+        color={theme.primary}
+        source="MaterialIcons"
+      />
       <Box gap={2}>
         <ThemedText fontWeight="bold">{benefit.title}</ThemedText>
         <ThemedText size="sm" color={theme.lightText}>

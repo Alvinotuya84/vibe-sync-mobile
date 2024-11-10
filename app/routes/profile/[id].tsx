@@ -82,9 +82,16 @@ export default function ProfileScreen() {
                 {profile?.username}
               </ThemedText>
               {profile?.isVerified && (
+                // <ThemedIcon
+                //   name="check-circle"
+                //   size="lg"
+                //   color={theme.primary}
+                // />
+
                 <ThemedIcon
-                  name="check-circle"
+                  name="verified"
                   size="lg"
+                  source="MaterialIcons"
                   color={theme.primary}
                 />
               )}

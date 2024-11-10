@@ -116,9 +116,15 @@ export default function FeedOverlay({
                     {content.creator.username}
                   </ThemedText>
                   {content.creator.isVerified && (
+                    // <ThemedIcon
+                    //   name="check-circle"
+                    //   size="sm"
+                    //   color={theme.primary}
+                    // />
                     <ThemedIcon
-                      name="check-circle"
+                      name="verified"
                       size="sm"
+                      source="MaterialIcons"
                       color={theme.primary}
                     />
                   )}

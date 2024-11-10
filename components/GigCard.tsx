@@ -7,6 +7,7 @@ import ThemedButton from "@/components/ThemedButton";
 import { useTheme } from "@/hooks/useTheme.hook";
 import { formatDistanceToNow } from "date-fns";
 import { BASE_URL } from "@/constants/network";
+import ThemedIcon from "./ThemedIcon";
 
 export default function GigCard({ gig }) {
   const theme = useTheme();
@@ -26,7 +27,18 @@ export default function GigCard({ gig }) {
           <Box direction="row" justify="space-between" align="center">
             <ThemedText fontWeight="bold">
               {gig?.creator?.username}
-              {gig?.creator?.isVerified && " ✓"}
+              {gig?.creator?.isVerified && (
+                <ThemedIcon
+                  // style={{
+                  //   left: -5,
+                  //   bottom: 3,
+                  // }}
+                  name="verified"
+                  size="sm"
+                  color={theme.primary}
+                  source="MaterialIcons"
+                />
+              )}
             </ThemedText>
             <ThemedText fontWeight="bold" color={theme.primary}>
               ${gig.price}

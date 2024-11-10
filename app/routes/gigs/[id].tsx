@@ -84,9 +84,14 @@ export default function GigDetailScreen() {
                   </ThemedText>
                   {gig.creator.isVerified && (
                     <ThemedIcon
-                      name="check-circle"
+                      // style={{
+                      //   left: -5,
+                      //   bottom: 3,
+                      // }}
+                      name="verified"
                       size="sm"
                       color={theme.primary}
+                      source="MaterialIcons"
                     />
                   )}
                 </Box>
