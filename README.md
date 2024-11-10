@@ -40,7 +40,6 @@ If you encounter any installation problems:
 - X(Formerly Twitter): [@alvinotuya](https://x.com/alvinotuya)
 
 ![App Banner](assets/screenshots/banner.png)
-![](/assets/screenshots/banner.png)
 
 ## 📱 App Screenshots
 
