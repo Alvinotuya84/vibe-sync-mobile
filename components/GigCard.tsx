@@ -6,6 +6,7 @@ import ThemedText from "@/components/ThemedText";
 import ThemedButton from "@/components/ThemedButton";
 import { useTheme } from "@/hooks/useTheme.hook";
 import { formatDistanceToNow } from "date-fns";
+import { BASE_URL } from "@/constants/network";
 
 export default function GigCard({ gig }) {
   const theme = useTheme();
@@ -14,7 +15,7 @@ export default function GigCard({ gig }) {
     <Box pa={15} radius={10} color={theme.surface} gap={15}>
       <Box direction="row" gap={10} align="center">
         <Image
-          source={{ uri: gig.creator.profileImagePath }}
+          source={{ uri: `${BASE_URL}/${gig?.creator?.profileImagePath}` }}
           style={{
             width: 40,
             height: 40,

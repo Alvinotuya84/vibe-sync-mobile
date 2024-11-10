@@ -4,17 +4,14 @@ import { useLocalSearchParams } from "expo-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Page from "@/components/Page";
 import Box from "@/components/Box";
-import ThemedTextInput from "@/components/ThemedTextInput";
-import ThemedButton from "@/components/ThemedButton";
+import ChatInput from "@/components/ChatInput"; // Import the ChatInput component
 import { fetchJson, postJson } from "@/utils/fetch.utils";
-import { useTheme } from "@/hooks/useTheme.hook";
 import useUserStore from "@/stores/user.store";
 import MessageBubble from "@/components/MessageBubble";
 import { BASE_URL } from "@/constants/network";
 
 export default function ChatDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const theme = useTheme();
   const queryClient = useQueryClient();
   const currentUser = useUserStore((state) => state.user);
   const [message, setMessage] = useState("");
@@ -31,7 +28,6 @@ export default function ChatDetailScreen() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["messages", id] });
       setMessage("");
-      // Scroll to bottom after sending
       flatListRef.current?.scrollToEnd();
     },
   });
@@ -61,30 +57,16 @@ export default function ChatDetailScreen() {
             contentContainerStyle={{ padding: 15 }}
             onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
           />
-          <Box direction="row" gap={10} pa={15} color={theme.surface}>
-            <ThemedTextInput
-              wrapper={{
-                width: 250,
-              }}
-              style={{
-                flex: 1,
-              }}
-              value={message}
-              onChangeText={setMessage}
-              placeholder="Type a message..."
-            />
-            <ThemedButton
-              type="primary"
-              icon={{ name: "send" }}
-              onPress={() => {
-                if (message.trim()) {
-                  sendMessageMutation.mutate(message.trim());
-                }
-              }}
-              loading={sendMessageMutation.isPending}
-              disabled={!message.trim()}
-            />
-          </Box>
+          <ChatInput
+            value={message}
+            onChangeText={setMessage}
+            onSend={() => {
+              if (message.trim()) {
+                sendMessageMutation.mutate(message.trim());
+              }
+            }}
+            isLoading={sendMessageMutation.isPending}
+          />
         </Box>
       </KeyboardAvoidingView>
     </Page>

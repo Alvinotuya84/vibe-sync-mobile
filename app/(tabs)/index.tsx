@@ -1,4 +1,3 @@
-// app/(tabs)/gigs/index.tsx
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FlashList } from "@shopify/flash-list";
@@ -6,7 +5,6 @@ import Page from "@/components/Page";
 import Box from "@/components/Box";
 import ThemedButton from "@/components/ThemedButton";
 import ThemedText from "@/components/ThemedText";
-
 import { fetchJson } from "@/utils/fetch.utils";
 import { GigFiltersType } from "@/types/gigs.types";
 import GigFilters from "@/components/GigFilters";
@@ -21,14 +19,47 @@ export default function GigsScreen() {
     minPrice: undefined,
     maxPrice: undefined,
     skills: [],
+    category: undefined,
+    sortBy: undefined,
+    page: 1,
+    limit: 20,
   });
 
-  const { data, isLoading } = useQuery({
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Helper function to format filters into query parameters
+  const buildQueryString = (filters: GigFiltersType) => {
+    const queryParams = new URLSearchParams();
+
+    if (filters.minPrice !== undefined)
+      queryParams.append("minPrice", filters.minPrice.toString());
+    if (filters.maxPrice !== undefined)
+      queryParams.append("maxPrice", filters.maxPrice.toString());
+    if (filters.skills.length > 0)
+      queryParams.append("skills", filters.skills.join(","));
+    if (filters.category) queryParams.append("category", filters.category);
+    if (filters.sortBy) queryParams.append("sortBy", filters.sortBy);
+    if (filters.page !== undefined)
+      queryParams.append("page", filters.page.toString());
+    if (filters.limit !== undefined)
+      queryParams.append("limit", filters.limit.toString());
+
+    return queryParams.toString();
+  };
+
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["gigs", filters],
-    queryFn: () => fetchJson(`${BASE_URL}/gigs`, { params: filters }),
+    queryFn: () => fetchJson(`${BASE_URL}/gigs?${buildQueryString(filters)}`),
   });
 
   const gigs = data?.data?.gigs || [];
+
+  // Refresh function to be triggered on pull-down
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
 
   return (
     <Page
@@ -46,8 +77,17 @@ export default function GigsScreen() {
       <ThemedButton
         type="primary"
         label="Post a Gig"
-        onPress={() => router.push("/gigs/create")}
+        onPress={() => router.push("/routes/gigs/create")}
         size="sm"
+      />
+      <ThemedButton
+        loading={isLoading}
+        type="primary-outlined"
+        icon={{
+          name: "reload",
+          size: 24,
+          source: "Ionicons",
+        }}
       />
       <Box pa={20} gap={20}>
         <GigFilters currentFilters={filters} onFilterChange={setFilters} />
@@ -64,6 +104,8 @@ export default function GigsScreen() {
             renderItem={({ item }) => <GigCard gig={item} />}
             estimatedItemSize={200}
             ItemSeparatorComponent={() => <Box height={20} />}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
           />
         )}
       </Box>

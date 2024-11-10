@@ -44,6 +44,9 @@ export default function ChatInput({
     >
       <ThemedTextInput
         textInputRef={inputRef}
+        wrapper={{
+          width: 250,
+        }}
         style={{
           flex: 1,
           maxHeight: 100,
@@ -53,6 +56,18 @@ export default function ChatInput({
         placeholder="Type a message..."
         multiline
       />
+
+      {/* <ThemedTextInput
+              wrapper={{
+                width: 250,
+              }}
+              style={{
+                flex: 1,
+              }}
+              value={message}
+              onChangeText={setMessage}
+              placeholder="Type a message..."
+            /> */}
       <ThemedButton
         type="primary"
         icon={{ name: "send" }}
