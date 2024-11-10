@@ -1,7 +1,13 @@
 import { sHeight } from "@/constants/dimensions.constant";
 import useKeyboardVisibility from "@/hooks/useKeyboardVisiblity.hook";
 import React, { ReactNode } from "react";
-import { Modal, ModalBaseProps, Pressable, ScrollView } from "react-native";
+import {
+  Modal,
+  ModalBaseProps,
+  Pressable,
+  ScrollView,
+  ViewProps,
+} from "react-native";
 import Animated, {
   SlideInDown,
   SlideInUp,
@@ -14,7 +20,6 @@ import Box, { BoxProps } from "./Box";
 import ThemedButton from "./ThemedButton";
 import ThemedIcon, { ThemedIconProps } from "./ThemedIcon";
 import ThemedText, { ThemedTextProps } from "./ThemedText";
-import { ViewProps } from "react-native-svg/lib/typescript/fabric/utils";
 
 export default function ThemedModal({
   visible = false,
