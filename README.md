@@ -199,8 +199,8 @@ npm run android
 Create a `.env` file in the root directory:
 
 ```env
-BASE_URL=your_api_url
-STRIPE_PUBLISHABLE_KEY=your_stripe_key
+EXPO_PUBLIC_BASE_URL=your_api_url
+EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_key
 ```
 
 ## 📱 Main Features Walkthrough
