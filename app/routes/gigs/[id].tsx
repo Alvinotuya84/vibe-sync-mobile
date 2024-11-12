@@ -70,7 +70,7 @@ export default function GigDetailScreen() {
           <Box direction="row" justify="space-between" align="center">
             <Box direction="row" gap={10} align="center">
               <Image
-                source={{ uri: gig.creator.profileImagePath }}
+                source={{ uri: `${BASE_URL}/${gig.creator.profileImagePath}` }}
                 style={{
                   width: 50,
                   height: 50,
@@ -215,7 +215,9 @@ export default function GigDetailScreen() {
                     <Box direction="row" justify="space-between" align="center">
                       <Box direction="row" align="center" gap={5}>
                         <Image
-                          source={{ uri: review.user.profileImagePath }}
+                          source={{
+                            uri: `${BASE_URL}/${review.user.profileImagePath}`,
+                          }}
                           style={{
                             width: 30,
                             height: 30,

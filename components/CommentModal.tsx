@@ -70,7 +70,7 @@ export default function CommentModal({
       <Box direction="row" gap={10}>
         <Box width={32} height={32} radius={16} overflow="hidden">
           <Image
-            source={{ uri: comment.user.profileImagePath }}
+            source={{ uri: `${BASE_URL}/${comment.user.profileImagePath}` }}
             style={{ width: "100%", height: "100%" }}
           />
         </Box>
