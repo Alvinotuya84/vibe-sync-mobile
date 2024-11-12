@@ -77,8 +77,9 @@ export default function ContentCard({ content }: ContentCardProps) {
 
   const isOwnContent = currentUser?.id === content.creator.id;
 
-  const profileImageUrl =
-    content.creator?.profileImageUrl || "https://via.placeholder.com/40";
+  const profileImageUrl = content.creator?.profileImageUrl
+    ? `${BASE_URL}${content.creator.profileImageUrl}`
+    : "https://via.placeholder.com/40";
 
   // Get appropriate media URL
   const mediaUrl =
@@ -170,11 +171,12 @@ export default function ContentCard({ content }: ContentCardProps) {
       >
         <Box height={300} position="relative">
           <Image
-            source={{ uri: mediaUrl }}
+            source={{ uri: `${BASE_URL}${mediaUrl}` }}
             style={{ width: "100%", height: "100%" }}
             onError={handleImageError}
             resizeMode="cover"
           />
+          {/* <ThemedText>{`${BASE_URL}/${mediaUrl}`}</ThemedText> */}
           {content.type === "video" && (
             <Box
               position="absolute"

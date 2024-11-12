@@ -66,9 +66,10 @@ export default function ProfileScreen() {
       <Box pa={20} gap={20}>
         {/* Profile Header */}
         <Box align="center" gap={15}>
+          {/* <ThemedText>{JSON.stringify(profileData)}</ThemedText> */}
           {profile?.profileImagePath ? (
             <Image
-              source={{ uri: profile.profileImagePath }}
+              source={{ uri: `${BASE_URL}/${profile.profileImagePath}` }}
               style={{
                 width: 100,
                 height: 100,

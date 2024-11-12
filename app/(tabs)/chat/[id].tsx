@@ -38,7 +38,6 @@ export default function ChatDetailScreen() {
     <Page
       header={{
         title: "Chat",
-        for: "Tab",
       }}
     >
       {/* <Box my={5} align="flex-start">
