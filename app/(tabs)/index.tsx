@@ -96,7 +96,7 @@ export default function GigsScreen() {
           <GigsSkeleton />
         ) : gigs.length === 0 ? (
           <Box align="center" justify="center" height={200}>
-            <ThemedText color="lightText">No gigs found</ThemedText>
+            <ThemedText>No gigs found</ThemedText>
           </Box>
         ) : (
           <FlashList
